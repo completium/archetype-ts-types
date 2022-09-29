@@ -508,7 +508,7 @@ export class Or<T1 extends ArchetypeTypeArg, T2 extends ArchetypeTypeArg> implem
   }
 }
 
-export class Bls12381Fr implements ArchetypeType {
+export class Bls12_381_fr implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -519,7 +519,7 @@ export class Bls12381Fr implements ArchetypeType {
         "bytes" : this._content
       }
   }
-  equals = (x : ChestKey) : boolean => {
+  equals = (x : Bls12_381_fr) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -527,7 +527,7 @@ export class Bls12381Fr implements ArchetypeType {
   }
 }
 
-export class Bls12381G1 implements ArchetypeType {
+export class Bls12_381_g1 implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -538,7 +538,7 @@ export class Bls12381G1 implements ArchetypeType {
         "bytes" : this._content
       }
   }
-  equals = (x : ChestKey) : boolean => {
+  equals = (x : Bls12_381_g1) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -546,7 +546,7 @@ export class Bls12381G1 implements ArchetypeType {
   }
 }
 
-export class Bls12381G2 implements ArchetypeType {
+export class Bls12_381_g2 implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -557,7 +557,7 @@ export class Bls12381G2 implements ArchetypeType {
         "bytes" : this._content
       }
   }
-  equals = (x : ChestKey) : boolean => {
+  equals = (x : Bls12_381_g2) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -565,7 +565,7 @@ export class Bls12381G2 implements ArchetypeType {
   }
 }
 
-export class ChainId implements ArchetypeType {
+export class Chain_id implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -576,7 +576,7 @@ export class ChainId implements ArchetypeType {
         "string" : this._content
       }
   }
-  equals = (x : ChainId) : boolean => {
+  equals = (x : Chain_id) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -603,7 +603,7 @@ export class Chest implements ArchetypeType {
   }
 }
 
-export class ChestKey implements ArchetypeType {
+export class Chest_key implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -614,7 +614,7 @@ export class ChestKey implements ArchetypeType {
         "bytes" : this._content
       }
   }
-  equals = (x : ChestKey) : boolean => {
+  equals = (x : Chest_key) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -622,7 +622,7 @@ export class ChestKey implements ArchetypeType {
   }
 }
 
-export class KeyHash implements ArchetypeType {
+export class Key_hash implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -633,7 +633,7 @@ export class KeyHash implements ArchetypeType {
         "string" : this._content
       }
   }
-  equals = (x : KeyHash) : boolean => {
+  equals = (x : Key_hash) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -641,7 +641,7 @@ export class KeyHash implements ArchetypeType {
   }
 }
 
-export class SaplingState implements ArchetypeType {
+export class Sapling_state implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -652,7 +652,7 @@ export class SaplingState implements ArchetypeType {
         "bytes" : this._content
       }
   }
-  equals = (x : SaplingState) : boolean => {
+  equals = (x : Sapling_state) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -660,7 +660,7 @@ export class SaplingState implements ArchetypeType {
   }
 }
 
-export class SaplingTransaction implements ArchetypeType {
+export class Sapling_transaction implements ArchetypeType {
   private _content : string
   constructor(v : string) {
     /* TODO check value validity */
@@ -671,7 +671,7 @@ export class SaplingTransaction implements ArchetypeType {
         "bytes" : this._content
       }
   }
-  equals = (x : SaplingTransaction) : boolean => {
+  equals = (x : Sapling_transaction) : boolean => {
     return this._content == x.toString()
   }
   toString = () : string => {
@@ -941,40 +941,40 @@ export const mich_to_bool = (x : Micheline) : boolean => {
   }
 }
 
-export const mich_to_bls12_381_fr = (x : Micheline) : Bls12381Fr => {
-  return new Bls12381Fr((x as Mbytes)["bytes"])
+export const mich_to_bls12_381_fr = (x : Micheline) : Bls12_381_fr => {
+  return new Bls12_381_fr((x as Mbytes)["bytes"])
 }
 
-export const mich_to_bls12_381_g1 = (x : Micheline) : Bls12381G1 => {
-  return new Bls12381G1((x as Mbytes)["bytes"])
+export const mich_to_bls12_381_g1 = (x : Micheline) : Bls12_381_g1 => {
+  return new Bls12_381_g1((x as Mbytes)["bytes"])
 }
 
-export const mich_to_bls12_381_g2 = (x : Micheline) : Bls12381G2 => {
-  return new Bls12381G2((x as Mbytes)["bytes"])
+export const mich_to_bls12_381_g2 = (x : Micheline) : Bls12_381_g2 => {
+  return new Bls12_381_g2((x as Mbytes)["bytes"])
 }
 
-export const mich_to_chain_id = (x : Micheline) : ChainId => {
-  return new ChainId((x as Mstring)["string"])
+export const mich_to_chain_id = (x : Micheline) : Chain_id => {
+  return new Chain_id((x as Mstring)["string"])
 }
 
 export const mich_to_chest = (x : Micheline) : Chest => {
   return new Chest((x as Mbytes)["bytes"])
 }
 
-export const mich_to_chest_key = (x : Micheline) : ChestKey => {
-  return new ChestKey((x as Mbytes)["bytes"])
+export const mich_to_chest_key = (x : Micheline) : Chest_key => {
+  return new Chest_key((x as Mbytes)["bytes"])
 }
 
-export const mich_to_key_hash = (x : Micheline) : KeyHash => {
-  return new KeyHash((x as Mbytes)["bytes"])
+export const mich_to_key_hash = (x : Micheline) : Key_hash => {
+  return new Key_hash((x as Mbytes)["bytes"])
 }
 
-export const mich_to_sapling_state = (x : Micheline) : SaplingState => {
-  return new SaplingState((x as Mbytes)["bytes"])
+export const mich_to_sapling_state = (x : Micheline) : Sapling_state => {
+  return new Sapling_state((x as Mbytes)["bytes"])
 }
 
-export const mich_to_sapling_transaction = (x : Micheline) : SaplingTransaction => {
-  return new SaplingTransaction((x as Mbytes)["bytes"])
+export const mich_to_sapling_transaction = (x : Micheline) : Sapling_transaction => {
+  return new Sapling_transaction((x as Mbytes)["bytes"])
 }
 
 export const mich_to_unit = (x : Micheline) : Unit => {
