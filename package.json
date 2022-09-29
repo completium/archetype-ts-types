@@ -1,5 +1,5 @@
 {
-  "name": "archetype-ts-types",
+  "name": "@completium/archetype-ts-types",
   "version": "0.0.1",
   "description": "TS types for Archetype",
   "main": "build/src/index.js",
