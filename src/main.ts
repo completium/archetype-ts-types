@@ -383,7 +383,7 @@ export const some_to_mich = (a : Micheline) : Micheline => {
   }
 }
 
-type ArchetypeTypeArg = ArchetypeType | Array<ArchetypeTypeArg> | string | Date | boolean
+export type ArchetypeTypeArg = ArchetypeType | Array<ArchetypeTypeArg> | string | Date | boolean
 
 const generic_to_mich = (x: any): Micheline => {
   switch (typeof x) {
