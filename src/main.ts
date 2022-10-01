@@ -272,6 +272,23 @@ export class Bytes implements ArchetypeType {
   toString = () : string => {
     return this._content
   }
+  /**
+   * Encode string to hexadecimal bytes
+   * @param s string to encode
+   * @returns new bytes object
+   */
+  static hex_encode(s : string) : Bytes {
+    const output = Buffer.from(s).toString('hex')
+    return new Bytes(output)
+  }
+  /**
+   * Decodes hexadecimal bytes to string
+   * @returns decoded string
+   */
+  hex_decode = () : string => {
+    const output = Buffer.from(this._content, 'hex').toString();
+    return output
+  }
 }
 
 export class Signature implements ArchetypeType {
