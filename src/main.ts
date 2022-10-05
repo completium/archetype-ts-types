@@ -420,7 +420,7 @@ const generic_to_mich = (x: any): Micheline => {
   }
 }
 
-export class Option<T extends ArchetypeTypeArg | string | Date | boolean> implements ArchetypeType {
+export class Option<T extends ArchetypeTypeArg> implements ArchetypeType {
   _content : T | undefined | null
   constructor(v : T | undefined | null) {
     this._content = v
