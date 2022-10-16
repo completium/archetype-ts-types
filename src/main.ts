@@ -341,6 +341,7 @@ export class Entrypoint implements ArchetypeType {
 export abstract class Enum<T> implements ArchetypeType {
   constructor(private _kind : T) {}
   type() { return this._kind }
+  abstract to_mich() : Micheline
   abstract toString(): string
 }
 
