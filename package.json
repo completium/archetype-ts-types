@@ -6,7 +6,8 @@
   "types": "build/src/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "rm -rf ./build && npx tsc --outDir build"
+    "build": "rm -rf ./build && npx tsc --outDir build",
+    "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags"
   },
   "repository": {
     "type": "git",
