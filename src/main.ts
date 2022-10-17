@@ -525,18 +525,15 @@ export class Or<T1 extends ArchetypeTypeArg, T2 extends ArchetypeTypeArg> implem
   is_left() { return this._is_left }
   is_right() { return !this.is_left }
   to_mich(f_left : ((_ : T1) => Micheline), f_right : ((_ : T2) => Micheline)) : Micheline {
-    const cast_t1 = (x : T1 | T2) : T1 | null => {if((x as T1)){ return <T1>x } return null}
-    const cast_t2 = (x : T1 | T2) : T2 | null => {if((x as T2)){ return <T2>x } return null}
-    const c1 = cast_t1(this._content);
-    const c2 = cast_t2(this._content);
-    if (this.is_left() && c1 != null) {
-      const mich = f_left(c1)
+    if (this.is_left()) {
+      let c_left : T1 = this._content as T1;
+      const mich = f_left(c_left)
       return left_to_mich(mich)
-    } else if (c2 != null) {
-      const mich = f_right(c2)
+    } else {
+      let c_right : T2 = this._content as T2;
+      const mich = f_right(c_right)
       return right_to_mich(mich)
     }
-    throw new Error("Or.to_mich: internal error")
   }
   toString(): string {
     let str : string
