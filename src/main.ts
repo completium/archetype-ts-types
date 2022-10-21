@@ -923,7 +923,7 @@ export const mich_to_key = (x : Micheline) : Key => {
 }
 
 export const mich_to_tez = (x : Micheline) : Tez => {
-  return new Tez((x as Mint)["int"])
+  return new Tez((x as Mint)["int"], "mutez")
 }
 
 export const mich_to_bytes = (x : Micheline) : Bytes => {
@@ -971,7 +971,7 @@ export const mich_to_chest_key = (x : Micheline) : Chest_key => {
 }
 
 export const mich_to_key_hash = (x : Micheline) : Key_hash => {
-  return new Key_hash((x as Mbytes)["bytes"])
+  return new Key_hash((x as Mstring)["string"])
 }
 
 export const mich_to_sapling_state = (x : Micheline) : Sapling_state => {
