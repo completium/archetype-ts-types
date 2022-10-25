@@ -106,10 +106,12 @@ export interface BatchResult {
 }
 
 export interface GetterResult {
+  value: any
   dummy: number
 }
 
 export interface ViewResult {
+  value: any
   dummy: number
 }
 
