@@ -2,8 +2,8 @@ import BigNumber from 'bignumber.js';
 import { Nat, Rational } from '../src/main'
 
 describe('ArchetypeType', () => {
-  describe('Address', () => {
-  });
+  // describe('Address', () => {
+  // });
 
   describe('Nat', () => {
     describe('Constructor', () => {
