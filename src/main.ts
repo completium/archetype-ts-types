@@ -50,7 +50,7 @@ export type Micheline =
 export type MTprim = {
   "prim": "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" |
   "chain_id" | "chest" | "chest_key" | "int" | "key" | "key_hash" | "mutez" | "nat" |
-  "never" | "operation" | "signature" | "string" | "timestamp" | "unit"
+  "never" | "operation" | "signature" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"
   "annots": Array<string>
 }
 
@@ -739,6 +739,23 @@ export class Tez implements ArchetypeType {
   }
 }
 
+export class Tx_rollup_l2_address implements ArchetypeType {
+  private _content: string
+  constructor(v: string) {
+    this._content = v
+    /* TODO check address format */
+  }
+  to_mich(): Micheline {
+    return string_to_mich(this._content)
+  }
+  equals(a: Tx_rollup_l2_address): boolean {
+    return this._content == a.toString()
+  }
+  toString(): string {
+    return this._content
+  }
+}
+
 export class Unit implements ArchetypeType {
   to_mich(): Micheline {
     return {
@@ -758,7 +775,7 @@ export class Unit implements ArchetypeType {
 export const prim_to_mich_type = (
   p: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" |
     "chain_id" | "chest" | "chest_key" | "int" | "key" | "key_hash" | "mutez" | "nat" |
-    "never" | "operation" | "signature" | "string" | "timestamp" | "unit"): MichelineType => {
+    "never" | "operation" | "signature" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"): MichelineType => {
   return {
     prim: p,
     annots: []
@@ -768,7 +785,7 @@ export const prim_to_mich_type = (
 export const prim_annot_to_mich_type = (
   p: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" |
     "chain_id" | "chest" | "chest_key" | "int" | "key" | "key_hash" | "mutez" | "nat" |
-    "never" | "operation" | "signature" | "string" | "timestamp" | "unit",
+    "never" | "operation" | "signature" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit",
   a: Array<string>): MichelineType => {
   return {
     prim: p,
@@ -966,6 +983,10 @@ export const mich_to_duration = (x: Micheline): Duration => {
 
 export const mich_to_address = (x: Micheline): Address => {
   return new Address((x as Mstring)["string"])
+}
+
+export const mich_to_tx_rollup_l2_address = (x: Micheline): Tx_rollup_l2_address => {
+  return new Tx_rollup_l2_address((x as Mstring)["string"])
 }
 
 export const mich_to_bool = (x: Micheline): boolean => {
