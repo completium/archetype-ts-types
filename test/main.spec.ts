@@ -66,6 +66,32 @@ describe('ArchetypeType', () => {
 
     });
 
+    describe('to_number', () => {
+      it('String simple', () => {
+        expect(new Rational("5").to_number()).toBe(5);
+      });
+
+      it('Number simple', () => {
+        expect(new Rational(5).to_number()).toBe(5);
+      });
+
+      it('Number decimal', () => {
+        expect(new Rational(5.4464).to_number()).toBe(5.4464);
+      });
+
+      it('String decimal', () => {
+        expect(new Rational("5.4464").to_number()).toBe(5.4464);
+      });
+
+      it('String decimal percent', () => {
+        expect(new Rational("5.4464%").to_number()).toBe(0.054464);
+      });
+
+      it('String with big number', () => {
+        expect(new Rational("99999999999999999999999956456456456999999999", new BigNumber("999999999999956456456456999999999")).to_number()).toBe(100000000000.00435);
+      });
+    })
+
     describe('to_mich', () => {
       it('String simple', () => {
         expect(JSON.stringify(new Rational("5").to_mich())).toBe('{"prim":"Pair","args":[{"int":"5"},{"int":"1"}]}');

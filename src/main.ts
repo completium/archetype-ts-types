@@ -51,13 +51,13 @@ export type MTprim = {
   "prim": "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" |
   "chain_id" | "chest" | "chest_key" | "int" | "key" | "key_hash" | "mutez" | "nat" |
   "never" | "operation" | "signature" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"
-  "annots": Array<string>
+  "annots"?: Array<string>
 }
 
 export type MTsingle = {
   "prim": "contract" | "list" | "option" | "set" | "ticket",
   "args": [MichelineType]
-  "annots": Array<string>
+  "annots"?: Array<string>
 }
 
 export type MTint = {
@@ -65,19 +65,19 @@ export type MTint = {
   "args": [
     { "int": string }
   ]
-  "annots": Array<string>
+  "annots"?: Array<string>
 }
 
 export type MTPairArray = {
   "prim": "pair",
   "args": Array<MichelineType>
-  "annots": Array<string>
+  "annots"?: Array<string>
 }
 
 export type MTpair = {
   "prim": "big_map" | "lambda" | "map" | "or",
   "args": [MichelineType, MichelineType]
-  "annots": Array<string>
+  "annots"?: Array<string>
 }
 
 export type MichelineType =
@@ -391,6 +391,9 @@ export class Int implements ArchetypeType {
   to_big_number(): BigNumber {
     return this._content
   }
+  to_number(): number {
+    return this._content.toNumber()
+  }
   plus(x: Int): Int {
     return new Int(this._content.plus(x.to_big_number()))
   }
@@ -462,6 +465,9 @@ export class Nat implements ArchetypeType {
   }
   to_big_number(): BigNumber {
     return this._content
+  }
+  to_number(): number {
+    return this._content.toNumber()
   }
   plus(x: Nat): Nat {
     return new Nat(this._content.plus(x.to_big_number()))
@@ -620,6 +626,9 @@ export class Rational implements ArchetypeType {
   }
   to_big_number(): BigNumber {
     return this._content
+  }
+  to_number(): number {
+    return this._content.toNumber()
   }
   plus(x: Rational): Rational {
     return new Rational(this._content.plus(x.to_big_number()))
@@ -927,7 +936,7 @@ export const mich_to_pairs = (x: Micheline): Array<Micheline> => {
 
 export const annotated_mich_to_array = (x: Micheline, t: MichelineType): Array<Micheline> => {
   const internal_mich_to_array = (x: Micheline, t: MichelineType, acc: Array<Micheline>): Array<Micheline> => {
-    if (t.annots.length > 0) {
+    if (t.annots && t.annots.length > 0) {
       acc.push(x)
       return acc
     } else {
