@@ -864,6 +864,14 @@ export const pair_to_mich_type = (prim: "big_map" | "lambda" | "map" | "or", a: 
   }
 }
 
+export const pair_annot_to_mich_type = (prim: "big_map" | "lambda" | "map" | "or", a: MichelineType, b: MichelineType, annots: Array<string>): MichelineType => {
+  return {
+    prim: prim,
+    args: [a, b],
+    annots: annots
+  }
+}
+
 export const pair_array_to_mich_type = (l: Array<MichelineType>, annots: Array<string> = []): MichelineType => {
   return {
     prim: "pair",
