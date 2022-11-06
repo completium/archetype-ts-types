@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Nat, Rational } from '../src/main'
+import { Address, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket } from '../src/main'
 
 describe('ArchetypeType', () => {
   // describe('Address', () => {
@@ -92,6 +92,31 @@ describe('ArchetypeType', () => {
       });
     })
 
+    describe('Ticket', () => {
+      it('Ticket', () => {
+        const tjson : Micheline = {
+          "prim": "Pair",
+          "args": [
+            {
+              "string": "KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"
+            },
+            {
+              "string": "info"
+            },
+            {
+              "int": "1"
+            }
+          ]
+        };
+
+        const ticket_actual = mich_to_ticket<string>(tjson, (x : Micheline) : string => {return (x as Mstring).string});
+        expect(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), ("info" as string), new Nat(1)).equals(ticket_actual)).toBe(true)
+        expect(new Ticket(new Address("KT1XcpRnLQANuGCJ9SZW3GXVG8BArUKymqtk"), ("info" as string), new Nat(1)).equals(ticket_actual)).toBe(false)
+        expect(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), ("infu" as string), new Nat(1)).equals(ticket_actual)).toBe(false)
+        expect(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), ("info" as string), new Nat(2)).equals(ticket_actual)).toBe(false)
+      })
+    })
+
     describe('to_mich', () => {
       it('String simple', () => {
         expect(JSON.stringify(new Rational("5").to_mich())).toBe('{"prim":"Pair","args":[{"int":"5"},{"int":"1"}]}');
@@ -115,6 +140,11 @@ describe('ArchetypeType', () => {
 
       it('String with big number', () => {
         expect(JSON.stringify(new Rational("99999999999999999999999956456456456999999999", new BigNumber("999999999999956456456456999999999")).to_mich())).toBe('{"prim":"Pair","args":[{"int":"5000000000000217717717712832303"},{"int":"50000000000000000000"}]}')
+      });
+
+      it('Ticket', () => {
+        const f = (x : string) : Mstring => {return {"string": x}};
+        expect(JSON.stringify(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), "info", new Nat(1)).to_mich(f))).toBe('{"prim":"Pair","args":[{"string":"KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"},{"string":"info"},{"int":"1"}]}')
       });
     });
 

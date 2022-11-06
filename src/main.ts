@@ -748,6 +748,32 @@ export class Tez implements ArchetypeType {
   }
 }
 
+export class Ticket<T extends ArchetypeTypeArg> implements ArchetypeType {
+  ticketer: Address
+  contents: T
+  amount: Nat
+  constructor(ticketer: Address, contents: T, amount: Nat) {
+    this.ticketer = ticketer
+    this.contents = contents
+    this.amount = amount
+  }
+  get_ticketer = () : Address => {return this.ticketer}
+  get_contents = () : T => {return this.contents}
+  get_amount = () : Nat => {return this.amount}
+  to_mich = (f: ((_: T) => Micheline)): Micheline => {
+    const arg_ticketer = { "string": this.ticketer.toString() };
+    const arg_contents = f(this.contents);
+    const arg_amount: Mint = { "int": this.amount.toString() };
+    return { prim: "Pair", args: [arg_ticketer, arg_contents, arg_amount] }
+  };
+  equals = (t: Ticket<T>) => {
+    return this.toString() == t.toString()
+  }
+  toString = (): string => {
+    return `(${this.ticketer.toString()}, ${this.contents.toString()}, ${this.amount.toString()})`
+  };
+}
+
 export class Tx_rollup_l2_address implements ArchetypeType {
   private _content: string
   constructor(v: string) {
@@ -1084,6 +1110,13 @@ export const mich_to_rational = (x: Micheline): Rational => {
   const numerator = new BigNumber(((x as Mpair).args[0] as Mint)["int"])
   const denominator = new BigNumber(((x as Mpair).args[1] as Mint)["int"])
   return new Rational(numerator.dividedBy(denominator))
+}
+
+export const mich_to_ticket = <T extends ArchetypeType>(x: Micheline, mich_to: (_: Micheline) => T): Ticket<T> => {
+  const source = new Address(((x as Mpair).args[0] as Mstring)["string"])
+  const value = mich_to((x as Mpair).args[1]);
+  const amount = new Nat(((x as Mpair).args[2] as Mint)["int"])
+  return new Ticket<T>(source, value, amount)
 }
 
 export const mich_to_map = <K, V>(x: Micheline, f: { (k: Micheline, v: Micheline): [K, V] }): Array<[K, V]> => {
