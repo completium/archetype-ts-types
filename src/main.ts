@@ -933,6 +933,22 @@ export const option_annot_to_mich_type = (mt: MichelineType, a: Array<string>): 
   }
 }
 
+export const ticket_to_mich_type = (a: MichelineType): MichelineType => {
+  return {
+    prim: "ticket",
+    args: [a],
+    annots: []
+  }
+}
+
+export const ticket_annot_to_mich_type = (mt: MichelineType, a: Array<string>): MichelineType => {
+  return {
+    prim: "ticket",
+    args: [mt],
+    annots: a
+  }
+}
+
 export const list_to_mich = <T>(l: Array<T>, to_mich: { (a: T): Micheline }): Micheline => {
   return l.map(x => to_mich(x))
 }
