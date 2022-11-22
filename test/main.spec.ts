@@ -36,8 +36,6 @@ describe('ArchetypeType', () => {
     })
   })
 
-
-
   describe('Rational', () => {
     describe('toString', () => {
       it('String simple', () => {
@@ -94,7 +92,7 @@ describe('ArchetypeType', () => {
 
     describe('Ticket', () => {
       it('Ticket', () => {
-        const tjson : Micheline = {
+        const tjson: Micheline = {
           "prim": "Pair",
           "args": [
             {
@@ -109,7 +107,7 @@ describe('ArchetypeType', () => {
           ]
         };
 
-        const ticket_actual = mich_to_ticket<string>(tjson, (x : Micheline) : string => {return (x as Mstring).string});
+        const ticket_actual = mich_to_ticket<string>(tjson, (x: Micheline): string => { return (x as Mstring).string });
         expect(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), ("info" as string), new Nat(1)).equals(ticket_actual)).toBe(true)
         expect(new Ticket(new Address("KT1XcpRnLQANuGCJ9SZW3GXVG8BArUKymqtk"), ("info" as string), new Nat(1)).equals(ticket_actual)).toBe(false)
         expect(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), ("infu" as string), new Nat(1)).equals(ticket_actual)).toBe(false)
@@ -143,22 +141,58 @@ describe('ArchetypeType', () => {
       });
 
       it('Ticket', () => {
-        const f = (x : string) : Mstring => {return {"string": x}};
+        const f = (x: string): Mstring => { return { "string": x } };
         expect(JSON.stringify(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), "info", new Nat(1)).to_mich(f))).toBe('{"prim":"Pair","args":[{"string":"KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"},{"string":"info"},{"int":"1"}]}')
       });
     });
 
   })
-})
 
+  describe('Duration', () => {
 
-describe('Duration', () => {
-  it('Simple test', () => {
-    expect(new Duration("0").toString()).toBe("0")
+    test('Fails with empty string', () => {
+      expect(() => { new Duration("") }).toThrow("Invalid duration input. Received input: `' Try this format: '_w_d_h_m_s'.")
+    });
+
+    test('Fails with dummy string', () => {
+      expect(() => { new Duration("dummy") }).toThrow("Invalid duration input. Received input: `dummy' Try this format: '_w_d_h_m_s'.")
+    });
+
+    test('Fails with number string', () => {
+      expect(() => { new Duration("0") }).toThrow("Invalid duration input. Received input: `0' Try this format: '_w_d_h_m_s'.")
+    });
+
+    it('Simple test', () => {
+      expect(new Duration("0s").toSecond()).toBe(0)
+    })
+
+    it('1 second test', () => {
+      expect(new Duration("1s").toSecond()).toBe(1)
+    })
+
+    it('1 minute test', () => {
+      expect(new Duration("1m").toSecond()).toBe(60)
+    })
+
+    it('1 hour test', () => {
+      expect(new Duration("1h").toSecond()).toBe(3600)
+    })
+
+    it('1 day test', () => {
+      expect(new Duration("1d").toSecond()).toBe(86400)
+    })
+
+    it('1 week test', () => {
+      expect(new Duration("1w").toSecond()).toBe(604800)
+    })
+
+    it('1 week, 1 day, 1 hour, 1 minute, 1 second test', () => {
+      expect(new Duration("1w1d1h1m1s").toSecond()).toBe(694861)
+    })
+
+    it('3 weeks, 8 days, 4 hours, 34 minutes, 18 seconds test', () => {
+      expect(new Duration("3w8d4h34m18s").toSecond()).toBe(2522058)
+    })
+
   })
-
-  it('1 second test', () => {
-    expect(new Duration("1s").toString()).toBe("1")
-  })
-
 })

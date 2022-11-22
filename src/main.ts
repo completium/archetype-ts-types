@@ -333,83 +333,10 @@ export class Chest_key implements ArchetypeType {
   }
 }
 
-//UTILITY FUNCTIONS FOR Duration TYPE
-function isDurationValid(durationLiteral : string) {
-  const DURATION_VALIDATOR = /(\d+[wdhms]){1,5}/g
-  
-  const durationMatchArray = durationLiteral.match(DURATION_VALIDATOR)
-  if (durationMatchArray === null) return false
-    const durationMatch = durationMatchArray[0]
-    if (durationMatch !== durationLiteral) return false
-    
-    const doUnitsRepeat = () => {
-  
-      const charCount = (str: string, char: string) =>  {
-        let matches = str.match(RegExp(`${char}`, `g`))
-        if (matches === null) return 0
-        return matches.length
-      }
-    
-      const repeatArray = ['w','d','h','m','s'].map(letter =>
-      charCount(durationLiteral, letter) > 1 )
-  
-      const repeatFound = repeatArray.find(check => check === true)
-  
-      if (repeatFound) throw new Error("Invalid duration input. Units may not be repeated. Recieved input: " + durationLiteral)
-      return repeatFound
-      }
-
-      doUnitsRepeat()
-
-      console.log("Duration input is valid. Received input: " + durationLiteral)
-      return true
-    }
-  
-
-function convertDurationLiteralToSeconds (durationLiteral : string) {
-
-if (!isDurationValid(durationLiteral)) 
-  throw new Error("Invalid duration input. Received input: " + durationLiteral + " Try this format: '_w_d_h_m_s'.")
-
-const buildUnitCountsObj = (durationLiteral: string) => {
-
-  const units = durationLiteral.match(/[wdhms]/g)  
-  const counts = durationLiteral.match(/\d+/g)
-  
-  const unitsCountsZipped = counts!.map((count, i) => {
-    const numCount : number = Number(count)
-    const strUnit = units![i] 
-
-    return [strUnit, numCount]
-  } )
-
-return Object.fromEntries(unitsCountsZipped)
-}
-
-const DURATION_CONVERSIONS: {[char: string] : number} = {
-  'w' : 604800,
-  'd' : 86400,
-  'h' : 3600,
-  'm' : 60,
-  's' : 1
-}
-
-const unitCounts = buildUnitCountsObj(durationLiteral)
-
-const summedDuration = Object.keys(unitCounts).reduce((acc, key) => {
-  const seconds = unitCounts[key] * DURATION_CONVERSIONS[key]
-return acc + seconds
-} ,0) 
-
-return summedDuration
-}
-
 export class Duration implements ArchetypeType {
   private _content: number
   constructor(v: string) {
-
-    this._content = convertDurationLiteralToSeconds(v)
-
+    this._content = this.convert_duration_literal_to_seconds(v)
   }
   to_mich(): Micheline {
     return { "int": this._content.toString() }
@@ -419,6 +346,39 @@ export class Duration implements ArchetypeType {
   }
   toString(): string {
     return this._content.toString()
+  }
+  toSecond(): number {
+    return this._content;
+  }
+  private DURATION_CONVERSION = {
+    'w': 1 * 60 * 60 * 24 * 7,
+    'd': 1 * 60 * 60 * 24,
+    'h': 1 * 60 * 60,
+    'm': 1 * 60,
+    's': 1
+  }
+  private is_duration_valid(input: string) {
+    return Object.keys(this.DURATION_CONVERSION).reduce((acc, key) => {
+      const regexp = new RegExp(`\\d+${key}`);
+      const ritem_value = input.match(regexp)
+      return acc || ritem_value != null
+    }, false)
+  }
+  private convert_duration_literal_to_seconds(input: string) {
+
+    if (!this.is_duration_valid(input))
+      throw new Error("Invalid duration input. Received input: `" + input + "' Try this format: '_w_d_h_m_s'.")
+
+    return Object.entries(this.DURATION_CONVERSION).reduce((acc, [key, value]) => {
+      let item_value = 0;
+      const regexp = new RegExp(`\\d+${key}`);
+      const ritem_value = input.match(regexp)
+      if (ritem_value != null) {
+        const v = ritem_value[0].slice(0, -1);
+        item_value = Number.parseInt(v, 10)
+      }
+      return item_value * value + acc
+    }, 0)
   }
 }
 
@@ -829,9 +789,9 @@ export class Ticket<T extends ArchetypeTypeArg> implements ArchetypeType {
     this.contents = contents
     this.amount = amount
   }
-  get_ticketer = () : Address => {return this.ticketer}
-  get_contents = () : T => {return this.contents}
-  get_amount = () : Nat => {return this.amount}
+  get_ticketer = (): Address => { return this.ticketer }
+  get_contents = (): T => { return this.contents }
+  get_amount = (): Nat => { return this.amount }
   to_mich = (f: ((_: T) => Micheline)): Micheline => {
     const arg_ticketer = { "string": this.ticketer.toString() };
     const arg_contents = f(this.contents);
