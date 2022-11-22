@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js'
+import { count } from 'console'
 
 /* Michleline -------------------------------------------------------------- */
 
@@ -333,11 +334,83 @@ export class Chest_key implements ArchetypeType {
   }
 }
 
+//UTILITY FUNCTIONS FOR Duration TYPE
+function isDurationValid(durationLiteral : string) {
+  const DURATION_VALIDATOR = /(\d+[wdhms]){1,5}/g
+  
+  const durationMatchArray = durationLiteral.match(DURATION_VALIDATOR)
+  if (durationMatchArray === null) return false
+    const durationMatch = durationMatchArray[0]
+    if (durationMatch !== durationLiteral) return false
+    
+    const doUnitsRepeat = () => {
+  
+      const charCount = (str: string, char: string) =>  {
+        let matches = str.match(RegExp(`${char}`, `g`))
+        if (matches === null) return 0
+        return matches.length
+      }
+    
+      const repeatArray = ['w','d','h','m','s'].map(letter =>
+      charCount(durationLiteral, letter) > 1 )
+  
+      const repeatFound = repeatArray.find(check => check === true)
+  
+      if (repeatFound) throw new Error("Invalid duration input. Units may not be repeated. Recieved input: " + durationLiteral)
+      return repeatFound
+      }
+
+      doUnitsRepeat()
+
+      console.log("Duration input is valid. Received input: " + durationLiteral)
+      return true
+    }
+  
+
+function convertDurationLiteralToSeconds (durationLiteral : string) {
+
+if (!isDurationValid(durationLiteral)) 
+  throw new Error("Invalid duration input. Received input: " + durationLiteral + " Try this format: '_w_d_h_m_s'.")
+
+const buildUnitCountsObj = (durationLiteral: string) => {
+
+  const units = durationLiteral.match(/[wdhms]/g)  
+  const counts = durationLiteral.match(/\d+/g)
+  
+  const unitsCountsZipped = counts!.map((count, i) => {
+    const numCount : number = Number(count)
+    const strUnit = units![i] 
+
+    return [strUnit, numCount]
+  } )
+
+return Object.fromEntries(unitsCountsZipped)
+}
+
+const DURATION_CONVERSIONS: {[char: string] : number} = {
+  'w' : 604800,
+  'd' : 86400,
+  'h' : 3600,
+  'm' : 60,
+  's' : 1
+}
+
+const unitCounts = buildUnitCountsObj(durationLiteral)
+
+const summedDuration = Object.keys(unitCounts).reduce((acc, key) => {
+  const seconds = unitCounts[key] * DURATION_CONVERSIONS[key]
+return acc + seconds
+} ,0) 
+
+return summedDuration
+}
+
 export class Duration implements ArchetypeType {
   private _content: number
   constructor(v: string) {
-    this._content = 0
-    /* TODO converts Archetype duration literal to number of seconds */
+
+    this._content = convertDurationLiteralToSeconds(v)
+
   }
   to_mich(): Micheline {
     return { "int": this._content.toString() }
