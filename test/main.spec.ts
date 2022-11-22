@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket } from '../src/main'
+import { Address, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket, Duration } from '../src/main'
 
 describe('ArchetypeType', () => {
   // describe('Address', () => {
@@ -149,4 +149,16 @@ describe('ArchetypeType', () => {
     });
 
   })
+})
+
+
+describe('Duration', () => {
+  it('Simple test', () => {
+    expect(new Duration("0").toString()).toBe("0")
+  })
+
+  it('1 second test', () => {
+    expect(new Duration("1s").toString()).toBe("1")
+  })
+
 })
