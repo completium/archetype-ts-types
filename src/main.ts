@@ -169,13 +169,8 @@ export const getter_args_to_mich = (arg: Micheline, callback: Entrypoint): Miche
 export class Address implements ArchetypeType {
   private _content: string
   constructor(v: string) {
-    
-    // this._content = v
-
     this._content = this.validate_address(v)
-  
-    /* TODO check address format */
-  }
+    }
   to_mich(): Micheline {
     return string_to_mich(this._content)
   }
@@ -198,8 +193,6 @@ export class Address implements ArchetypeType {
         throw new Error(`Invalid address input. Recieved input: ${input}`)
       }
     }
-      // (tz1|KT1)[A-Za-z0-9]{33}
-    // }
 
 }
 
