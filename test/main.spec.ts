@@ -200,15 +200,26 @@ describe('ArchetypeType', () => {
 
 describe('Address', () => {
 
-  test('Succeeds with Valid User Address', () => {
+  test('Succeeds with Valid tz1 User Address', () => {
     const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"
     expect(new Address(input).toString()).toBe(input)
   })
 
-  test('Succeeds with Valid Contract Address', () => {
+  test('Succeeds with Valid tz2 User Address', () => {
+    const input = "tz2VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"
+    expect(new Address(input).toString()).toBe(input)
+  })
+
+  test('Succeeds with Valid KT1 Contract Address', () => {
     const input = "KT1AaaBSo5AE6Eo9fpEN5xhCD4w3kHStafxk"
     expect(new Address(input).toString()).toBe(input)
   })
+
+  test('Succeeds with Valid KT2 Contract Address', () => {
+    const input = "KT2AaaBSo5AE6Eo9fpEN5xhCD4w3kHStafxk"
+    expect(new Address(input).toString()).toBe(input)
+  })
+
 
   test('Fails with invalid character', () => {
     const input = "tz1VSUr8ww!hLAzempoch5d6hLRiTh8Cjcjb"

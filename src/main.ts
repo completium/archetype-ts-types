@@ -183,7 +183,7 @@ export class Address implements ArchetypeType {
 
     private validate_address(input: string) {
       let valid_address = false
-      const regexp = new RegExp(/(tz1|KT1)[A-Za-z0-9]{33}/)
+      const regexp = new RegExp(/(tz|KT)[0-9][A-Za-z0-9]{33}/)
       const address_match = input.match(regexp)
       if (address_match !== null) 
         valid_address = address_match[0] === input 
