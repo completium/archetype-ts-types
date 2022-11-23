@@ -196,3 +196,53 @@ describe('ArchetypeType', () => {
 
   })
 })
+
+
+describe('Address', () => {
+
+  test('Succeeds with Valid User Address', () => {
+    const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"
+    expect(new Address(input).toString()).toBe(input)
+  })
+
+  test('Succeeds with Valid Contract Address', () => {
+    const input = "KT1AaaBSo5AE6Eo9fpEN5xhCD4w3kHStafxk"
+    expect(new Address(input).toString()).toBe(input)
+  })
+
+  test('Fails with invalid character', () => {
+    const input = "tz1VSUr8ww!hLAzempoch5d6hLRiTh8Cjcjb"
+    expect(() => { new Address(input) }).toThrow(`Invalid address input. Recieved input: ${input}`)
+  })
+
+  test('Fails if address too long', () => {
+    const input = "tz1VSUr8wwzhLAzempoch5d6hLRiTh8Cjcjbsaf"
+    expect(() => { new Address(input) }).toThrow(`Invalid address input. Recieved input: ${input}`)
+  })
+
+  test('Fails if address too short', () => {
+    const input = "KT1VSUr8wwzhLAzemp"
+    expect(() => { new Address(input) }).toThrow(`Invalid address input. Recieved input: ${input}`)
+  })
+
+  test('Fails with empty string', () => {
+    const input = ""
+    expect(() => { new Address(input) }).toThrow(`Invalid address input. Recieved input: ${input}`)
+  })
+
+  test('Fails with dummy string', () => {
+    const input = "dummy"
+    expect(() => { new Address(input) }).toThrow(`Invalid address input. Recieved input: ${input}`)
+  })
+
+  test('Fails without contract type prefix', () => {
+    const input = "VSUr8wwzhLAzempoch5d6hLRiTh8Cjcjbsaf"
+    expect(() => { new Address(input) }).toThrow(`Invalid address input. Recieved input: ${input}`)
+  })
+
+  test('Fails with prefix only', () => {
+    const input = "tz1"
+    expect(() => { new Address(input) }).toThrow(`Invalid address input. Recieved input: ${input}`)
+  })
+
+})
