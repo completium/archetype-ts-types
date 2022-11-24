@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket, Duration } from '../src/main'
+import { Address, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket, Duration } from '../src/main'
 
 describe('ArchetypeType', () => {
 
@@ -14,7 +14,7 @@ describe('ArchetypeType', () => {
       expect(() => { new Address(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
     })
 
-    test('Fails without contract type prefix', () => {
+    test('Fails without prefix', () => {
       const input = "VSUr8wwzhLAzempoch5d6hLRiTh8Cjcjbsaf"
       expect(() => { new Address(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
     })
@@ -53,6 +53,44 @@ describe('ArchetypeType', () => {
       const input = "KT1AaaBSo5AE6Eo8fpEN5xhCD4w3kHStafxk"
       expect(new Address(input).toString()).toBe(input)
     })
+  });
+
+  describe('Key', () => {
+    test('Fails with empty string', () => {
+      const input = ""
+      expect(() => { new Key(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with dummy string', () => {
+      const input = "dummy"
+      expect(() => { new Key(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails without prefix', () => {
+      const input = "vGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn"
+      expect(() => { new Key(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with bad encoding', () => {
+      const input = "edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhja"
+      expect(() => { new Key(input) }).toThrow(`Input is not b58 encoding compatible. Received input: ${input}`)
+    })
+
+    test('Succeeds with Valid edpk Key', () => {
+      const input = "edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn"
+      expect(new Key(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid spsk Key', () => {
+      const input = "sppk7b4TURq2T9rhPLFaSz6mkBCzKzfiBjctQSMorvLD5GSgCduvKuf"
+      expect(new Key(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid p2pk Key', () => {
+      const input = "p2pk65zwHGP9MdvANKkp267F4VzoKqL8DMNpPfTHUNKbm8S9DUqqdpw"
+      expect(new Key(input).toString()).toBe(input)
+    })
+
   });
 
   describe('Nat', () => {

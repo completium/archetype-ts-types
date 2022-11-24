@@ -477,8 +477,7 @@ export class Int implements ArchetypeType {
 export class Key implements ArchetypeType {
   private _content: string
   constructor(v: string) {
-    /* TODO check value validity */
-    this._content = v
+    this._content = is_base58_input_valid(v, this.public_key_prefixes)
   }
   to_mich(): Micheline {
     return {
@@ -490,6 +489,11 @@ export class Key implements ArchetypeType {
   }
   toString = (): string => {
     return this._content
+  }
+  private public_key_prefixes: { [char: string]: number } = {
+    edpk: 32,
+    sppk: 33,
+    p2pk: 33,
   }
 }
 
