@@ -30,9 +30,11 @@
   },
   "homepage": "https://github.com/completium/archetype-ts-types#readme",
   "dependencies": {
-    "bignumber.js": "^9.0.2"
+    "bignumber.js": "^9.0.2",
+    "bs58check": "^2.1.2"
   },
   "devDependencies": {
+    "@types/bs58check": "^2.1.0",
     "@types/jest": "^29.0.3",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",

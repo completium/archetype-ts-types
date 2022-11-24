@@ -2,8 +2,58 @@ import BigNumber from 'bignumber.js';
 import { Address, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket, Duration } from '../src/main'
 
 describe('ArchetypeType', () => {
-  // describe('Address', () => {
-  // });
+
+  describe('Address', () => {
+    test('Fails with empty string', () => {
+      const input = ""
+      expect(() => { new Address(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with dummy string', () => {
+      const input = "dummy"
+      expect(() => { new Address(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails without contract type prefix', () => {
+      const input = "VSUr8wwzhLAzempoch5d6hLRiTh8Cjcjbsaf"
+      expect(() => { new Address(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with bad encoding', () => {
+      const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8CjcIl"
+      expect(() => { new Address(input) }).toThrow(`Input is not b58 encoding compatible. Received input: ${input}`)
+    })
+
+    test('Succeeds with Valid tz1 User Address', () => {
+      const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"
+      expect(new Address(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid tz2 User Address', () => {
+      const input = "tz28US7zJ7rLdWke75XEM3T5cLWCCxjnP4zf"
+      expect(new Address(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid tz3 User Address', () => {
+      const input = "tz3hFR7NZtjT2QtzgMQnWb4xMuD6yt2YzXUt"
+      expect(new Address(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid tz4 User Address', () => {
+      const input = "tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm"
+      expect(new Address(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid txr1 User Address', () => {
+      const input = "txr1YNMEtkj5Vkqsbdmt7xaxBTMRZjzS96UAi"
+      expect(new Address(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid KT1 Contract Address', () => {
+      const input = "KT1AaaBSo5AE6Eo8fpEN5xhCD4w3kHStafxk"
+      expect(new Address(input).toString()).toBe(input)
+    })
+  });
 
   describe('Nat', () => {
     describe('Constructor', () => {
@@ -197,48 +247,3 @@ describe('ArchetypeType', () => {
   })
 })
 
-describe('Address', () => {
-
-  test('Succeeds with valid address', () => {
-    expect(new Address("tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb").toString()).toBe("tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
-  })
-
-
-  test('Succeeds with Valid tz1 User Address', () => {
-    const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"
-    expect(new Address(input).toString()).toBe(input)
-  })
-
-  test('Succeeds with Valid tz2 User Address', () => {
-    const input = "tz28US7zJ7rLdWke75XEM3T5cLWCCxjnP4zf"
-    expect(new Address(input).toString()).toBe(input)
-  })
-
-  test('Succeeds with Valid KT1 Contract Address', () => {
-    const input = "KT1AaaBSo5AE6Eo8fpEN5xhCD4w3kHStafxk"
-    expect(new Address(input).toString()).toBe(input)
-  })
-
-
-  test('Fails with missing character', () => {
-    const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcj"
-    expect(() => { new Address(input) }).toThrow(`Address is not b58 encoding compatible. Recieved input: ${input}`)
-  })
-
-
-  test('Fails with empty string', () => {
-    const input = ""
-    expect(() => { new Address(input) }).toThrow(`No matching prefix found. Recieved input: ${input}`)
-  })
-
-  test('Fails with dummy string', () => {
-    const input = "dummy"
-    expect(() => { new Address(input) }).toThrow(`No matching prefix found. Recieved input: ${input}`)
-  })
-
-  test('Fails without contract type prefix', () => {
-    const input = "VSUr8wwzhLAzempoch5d6hLRiTh8Cjcjbsaf"
-    expect(() => { new Address(input) }).toThrow(`No matching prefix found. Recieved input: ${input}`)
-  })
-
-})

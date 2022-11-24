@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js'
-import bs58check = require("bs58check")
+import bs58check from 'bs58check';
+
 /* Michleline -------------------------------------------------------------- */
 
 export type Mprim = {
@@ -164,14 +165,31 @@ export const getter_args_to_mich = (arg: Micheline, callback: Entrypoint): Miche
   return pair_to_mich([arg, callback.to_mich()]);
 }
 
+/* Internal utils ---------------------------------------------------------- */
+
+const is_base58_input_valid = (input: string, prefixes: { [char: string]: number }) => {
+  const prefixes_keys = Object.keys(prefixes)
+
+  const match = new RegExp(`^(${prefixes_keys.join('|')})`).exec(input);
+  if (!match || match.length == 0) throw new Error(`No matching prefix found. Received input: ${input}`)
+
+  let decoded: Buffer | undefined = bs58check.decodeUnsafe(input);
+  if (!decoded) throw new Error(`Input is not b58 encoding compatible. Received input: ${input}`)
+
+  const prefix = match[0];
+
+  decoded = decoded.subarray(prefix.length)
+
+  if (decoded.length != prefixes[prefix]) throw new Error(`The decoded output is the wrong length for the given prefix of ${prefix}.`)
+  return input
+}
+
 /* Int Nat Entrypoint Classes ---------------------------------------------- */
 
 export class Address implements ArchetypeType {
   private _content: string
-  
-
   constructor(v: string) {
-    this._content = this.is_address_valid(v)
+    this._content = is_base58_input_valid(v, this.address_prefixes)
   }
   to_mich(): Micheline {
     return string_to_mich(this._content)
@@ -182,32 +200,14 @@ export class Address implements ArchetypeType {
   toString(): string {
     return this._content
   }
- 
-  private decode_lengths : {[char: string] : number} = {
+
+  private address_prefixes: { [char: string]: number } = {
     tz1: 20,
     tz2: 20,
-    tz3: 20, 
+    tz3: 20,
     tz4: 20,
     txr1: 20,
-    KT1: 20,
-    KT: 20,
-  }
- 
-  private is_address_valid(input: string){
-    const prefixes = Object.keys(this.decode_lengths)
-
-    const match = new RegExp(`^(${prefixes.join('|')})`).exec(input);
-    if (!match || match.length === 0) throw new Error(`No matching prefix found. Recieved input: ${input}`)
-    
-    const prefix = match[0];
-
-    const decodedLong = bs58check.decodeUnsafe(input);
-    if (!decodedLong)  throw new Error(`Address is not b58 encoding compatible. Recieved input: ${input}`)
-    
-    const decoded = new Uint8Array(decodedLong).slice(prefix.length)
-    
-    if (decoded.length !== this.decode_lengths[prefix]) throw new Error(`The decoded Address output is the wrong length for the given prefix of ${prefix}.`)
-    return input
+    KT1: 20
   }
 }
 
