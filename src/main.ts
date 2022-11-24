@@ -1,6 +1,5 @@
 import { BigNumber } from 'bignumber.js'
 import bs58check = require("bs58check")
-import { Buffer } from 'buffer'
 /* Michleline -------------------------------------------------------------- */
 
 export type Mprim = {
