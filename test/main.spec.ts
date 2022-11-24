@@ -102,6 +102,16 @@ describe('Chain_id', () => {
       expect(() => { new Duration("0") }).toThrow("Invalid duration input. Received input: `0' Try this format: '_w_d_h_m_s'.")
     });
 
+    test('Fails with typo in unit letter', () => {
+      const input = "3g8d4h34m18s"
+      expect(() => { new Duration(input) }).toThrow("Invalid duration input. Received input: `" + input + "' Try this format: '_w_d_h_m_s'.")
+    });
+
+    test('Fails with typo in unit letter', () => {
+      const input = "3w8d4h34m18a"
+      expect(() => { new Duration(input) }).toThrow("Invalid duration input. Received input: `" + input + "' Try this format: '_w_d_h_m_s'.")
+    });
+
     it('Simple test', () => {
       expect(new Duration("0s").toSecond()).toBe(0)
     })
@@ -124,6 +134,10 @@ describe('Chain_id', () => {
 
     it('1 week test', () => {
       expect(new Duration("1w").toSecond()).toBe(604800)
+    })
+
+    it('1 week, 1 second test', () => {
+      expect(new Duration("1w1s").toSecond()).toBe(604801)
     })
 
     it('1 week, 1 day, 1 hour, 1 minute, 1 second test', () => {

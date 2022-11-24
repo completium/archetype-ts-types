@@ -388,6 +388,9 @@ export class Duration implements ArchetypeType {
     's': 1
   }
   private is_duration_valid(input: string) {
+    const pos_regexp = new RegExp(/(\d+[wdhms]){1,5}/)
+    const pos_valid = input.match(pos_regexp)
+    if (pos_valid && pos_valid[0] !== input) return false 
     return Object.keys(this.DURATION_CONVERSION).reduce((acc, key) => {
       const regexp = new RegExp(`\\d+${key}`);
       const ritem_value = input.match(regexp)
