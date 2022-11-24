@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket, Duration } from '../src/main'
+import { Address, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket, Duration, Signature } from '../src/main'
 
 describe('ArchetypeType', () => {
 
@@ -283,5 +283,44 @@ describe('ArchetypeType', () => {
     })
 
   })
+
+
+  describe('Signature', () => {
+    test('Fails with empty string', () => {
+      const input = ""
+      expect(() => { new Signature(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with dummy string', () => {
+      const input = "dummy"
+      expect(() => { new Signature(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails without prefix', () => {
+      const input = "thXYBNW7i5E1WNd87fBRJKacJjK5amJVKcyXd6fGxmnQo2ESmmdgN6qJXgbUVJDXha8xi96r9GqjsPorWWpPEwXNG3W8vG"
+      expect(() => { new Signature(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with bad encoding', () => {
+      const input = "edsigthXYBNW7i5E1WNd87fBRJKacJjK5amJVKcyXd6fGxmnQo2ESmmdgN6qJXgbUVJDXha8xi96r9GqjsPorWWpPEwXNG3W8vH"
+      expect(() => { new Signature(input) }).toThrow(`Input is not b58 encoding compatible. Received input: ${input}`)
+    })
+
+    test('Succeeds with Valid edsig Signature', () => {
+      const input = "edsigthXYBNW7i5E1WNd87fBRJKacJjK5amJVKcyXd6fGxmnQo2ESmmdgN6qJXgbUVJDXha8xi96r9GqjsPorWWpPEwXNG3W8vG"
+      expect(new Signature(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid spsig Signature', () => {
+      const input = "spsig1VrEwwc2UC4v9v3oYJ96VwiKwdVKK7ZYdMs4JVWNtfj11sRz9RkvPBtCHMiG1LEp44PJBXDh7bAzpDjGoX4bH7heoPuGqa"
+      expect(new Signature(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid p2sig Signature', () => {
+      const input = "p2siguNBbkRwuMKCyG9NeQb4ETNCDyqUnUCX4T4Um4dFgzCKyA7AzS4a6XBk1Encj4ndXsbK98UYNunZ7vHHFHMhh7jdajUHTY"
+      expect(new Signature(input).toString()).toBe(input)
+    })
+
+  });
 })
 

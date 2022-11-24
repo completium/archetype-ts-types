@@ -761,8 +761,7 @@ export class Sapling_transaction implements ArchetypeType {
 export class Signature implements ArchetypeType {
   private _content: string
   constructor(v: string) {
-    /* TODO check value validity */
-    this._content = v
+    this._content = is_base58_input_valid(v, this.signature_prefixes)
   }
   to_mich(): Micheline {
     return {
@@ -774,6 +773,11 @@ export class Signature implements ArchetypeType {
   }
   toString = (): string => {
     return this._content
+  }
+  private signature_prefixes: { [char: string]: number } = {
+    edsig: 64,
+    spsig: 64,
+    p2sig: 63,
   }
 }
 
