@@ -1,6 +1,5 @@
-import { Key_hash } from './../src/main';
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash } from '../src/main'
 
 describe('ArchetypeType', () => {
 
