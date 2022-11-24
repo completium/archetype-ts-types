@@ -307,8 +307,7 @@ export class Bytes implements ArchetypeType {
 export class Chain_id implements ArchetypeType {
   private _content: string
   constructor(v: string) {
-    /* TODO check value validity */
-    this._content = v
+    this._content = is_base58_input_valid(v, this.chain_id_prefixes)
   }
   to_mich(): Micheline {
     return {
@@ -320,6 +319,9 @@ export class Chain_id implements ArchetypeType {
   }
   toString = (): string => {
     return this._content
+  }
+  private chain_id_prefixes: { [char: string]: number } = {
+    Net: 4,
   }
 }
 

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Ticket, Duration, Signature } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket } from '../src/main'
 
 describe('ArchetypeType', () => {
 
@@ -54,6 +54,87 @@ describe('ArchetypeType', () => {
       expect(new Address(input).toString()).toBe(input)
     })
   });
+
+describe('Chain_id', () => {
+    test('Fails with empty string', () => {
+      const input = ""
+      expect(() => { new Chain_id(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with dummy string', () => {
+      const input = "dummy"
+      expect(() => { new Chain_id(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails without prefix', () => {
+      const input = "XynUjJNZm7wj"
+      expect(() => { new Chain_id(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with bad encoding', () => {
+      const input = "NetXynUjJNZm7wj"
+      expect(() => { new Chain_id(input) }).toThrow(`Input is not b58 encoding compatible. Received input: ${input}`)
+    })
+
+    test('Succeeds with Valid Chain_id', () => {
+      const input = "NetXdQprcVkpaWU"
+      expect(new Chain_id(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid Chain_id (mainnet)', () => {
+      const input = "NetXynUjJNZm7wi"
+      expect(new Chain_id(input).toString()).toBe(input)
+    })
+
+  });
+
+  describe('Duration', () => {
+
+    test('Fails with empty string', () => {
+      expect(() => { new Duration("") }).toThrow("Invalid duration input. Received input: `' Try this format: '_w_d_h_m_s'.")
+    });
+
+    test('Fails with dummy string', () => {
+      expect(() => { new Duration("dummy") }).toThrow("Invalid duration input. Received input: `dummy' Try this format: '_w_d_h_m_s'.")
+    });
+
+    test('Fails with number string', () => {
+      expect(() => { new Duration("0") }).toThrow("Invalid duration input. Received input: `0' Try this format: '_w_d_h_m_s'.")
+    });
+
+    it('Simple test', () => {
+      expect(new Duration("0s").toSecond()).toBe(0)
+    })
+
+    it('1 second test', () => {
+      expect(new Duration("1s").toSecond()).toBe(1)
+    })
+
+    it('1 minute test', () => {
+      expect(new Duration("1m").toSecond()).toBe(60)
+    })
+
+    it('1 hour test', () => {
+      expect(new Duration("1h").toSecond()).toBe(3600)
+    })
+
+    it('1 day test', () => {
+      expect(new Duration("1d").toSecond()).toBe(86400)
+    })
+
+    it('1 week test', () => {
+      expect(new Duration("1w").toSecond()).toBe(604800)
+    })
+
+    it('1 week, 1 day, 1 hour, 1 minute, 1 second test', () => {
+      expect(new Duration("1w1d1h1m1s").toSecond()).toBe(694861)
+    })
+
+    it('3 weeks, 8 days, 4 hours, 34 minutes, 18 seconds test', () => {
+      expect(new Duration("3w8d4h34m18s").toSecond()).toBe(2522058)
+    })
+
+  })
 
   describe('Key', () => {
     test('Fails with empty string', () => {
@@ -235,55 +316,6 @@ describe('ArchetypeType', () => {
     });
 
   })
-
-  describe('Duration', () => {
-
-    test('Fails with empty string', () => {
-      expect(() => { new Duration("") }).toThrow("Invalid duration input. Received input: `' Try this format: '_w_d_h_m_s'.")
-    });
-
-    test('Fails with dummy string', () => {
-      expect(() => { new Duration("dummy") }).toThrow("Invalid duration input. Received input: `dummy' Try this format: '_w_d_h_m_s'.")
-    });
-
-    test('Fails with number string', () => {
-      expect(() => { new Duration("0") }).toThrow("Invalid duration input. Received input: `0' Try this format: '_w_d_h_m_s'.")
-    });
-
-    it('Simple test', () => {
-      expect(new Duration("0s").toSecond()).toBe(0)
-    })
-
-    it('1 second test', () => {
-      expect(new Duration("1s").toSecond()).toBe(1)
-    })
-
-    it('1 minute test', () => {
-      expect(new Duration("1m").toSecond()).toBe(60)
-    })
-
-    it('1 hour test', () => {
-      expect(new Duration("1h").toSecond()).toBe(3600)
-    })
-
-    it('1 day test', () => {
-      expect(new Duration("1d").toSecond()).toBe(86400)
-    })
-
-    it('1 week test', () => {
-      expect(new Duration("1w").toSecond()).toBe(604800)
-    })
-
-    it('1 week, 1 day, 1 hour, 1 minute, 1 second test', () => {
-      expect(new Duration("1w1d1h1m1s").toSecond()).toBe(694861)
-    })
-
-    it('3 weeks, 8 days, 4 hours, 34 minutes, 18 seconds test', () => {
-      expect(new Duration("3w8d4h34m18s").toSecond()).toBe(2522058)
-    })
-
-  })
-
 
   describe('Signature', () => {
     test('Fails with empty string', () => {
