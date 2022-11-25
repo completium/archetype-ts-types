@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash } from '../src/main'
 
 describe('ArchetypeType', () => {
 
@@ -367,6 +367,58 @@ describe('Chain_id', () => {
       expect(new Signature(input).toString()).toBe(input)
     })
 
+  });
+
+  describe('Key_hash', () => {
+    test('Fails with empty string', () => {
+      const input = ""
+      expect(() => { new Address(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with dummy string', () => {
+      const input = "dummy"
+      expect(() => { new Key_hash(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails without prefix', () => {
+      const input = "VSUr8wwzhLAzempoch5d6hLRiTh8Cjcjbsaf"
+      expect(() => { new Key_hash(input) }).toThrow(`No matching prefix found. Received input: ${input}`)
+    })
+
+    test('Fails with bad encoding', () => {
+      const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8CjcIl"
+      expect(() => { new Key_hash(input) }).toThrow(`Input is not b58 encoding compatible. Received input: ${input}`)
+    })
+
+    test('Succeeds with Valid tz1 User Address', () => {
+      const input = "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"
+      expect(new Key_hash(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid tz2 User Address', () => {
+      const input = "tz28US7zJ7rLdWke75XEM3T5cLWCCxjnP4zf"
+      expect(new Key_hash(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid tz3 User Address', () => {
+      const input = "tz3hFR7NZtjT2QtzgMQnWb4xMuD6yt2YzXUt"
+      expect(new Key_hash(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid tz4 User Address', () => {
+      const input = "tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm"
+      expect(new Key_hash(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid txr1 User Address', () => {
+      const input = "txr1YNMEtkj5Vkqsbdmt7xaxBTMRZjzS96UAi"
+      expect(new Key_hash(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid KT1 Contract Address', () => {
+      const input = "KT1AaaBSo5AE6Eo8fpEN5xhCD4w3kHStafxk"
+      expect(new Key_hash(input).toString()).toBe(input)
+    })
   });
 })
 

@@ -184,12 +184,22 @@ const is_base58_input_valid = (input: string, prefixes: { [char: string]: number
   return input
 }
 
+/* Internal constants ---------------------------------------------------------- */
+const address_prefixes: { [char: string]: number } = {
+  tz1: 20,
+  tz2: 20,
+  tz3: 20,
+  tz4: 20,
+  txr1: 20,
+  KT1: 20
+}
+
 /* Int Nat Entrypoint Classes ---------------------------------------------- */
 
 export class Address implements ArchetypeType {
   private _content: string
   constructor(v: string) {
-    this._content = is_base58_input_valid(v, this.address_prefixes)
+    this._content = is_base58_input_valid(v, address_prefixes)
   }
   to_mich(): Micheline {
     return string_to_mich(this._content)
@@ -201,14 +211,6 @@ export class Address implements ArchetypeType {
     return this._content
   }
 
-  private address_prefixes: { [char: string]: number } = {
-    tz1: 20,
-    tz2: 20,
-    tz3: 20,
-    tz4: 20,
-    txr1: 20,
-    KT1: 20
-  }
 }
 
 export class Bls12_381_fr implements ArchetypeType {
@@ -505,13 +507,10 @@ export class Key implements ArchetypeType {
 export class Key_hash implements ArchetypeType {
   private _content: string
   constructor(v: string) {
-    /* TODO check value validity */
-    this._content = v
+    this._content = is_base58_input_valid(v, address_prefixes)
   }
   to_mich(): Micheline {
-    return {
-      "string": this._content
-    }
+    return string_to_mich(this._content)
   }
   equals = (x: Key_hash): boolean => {
     return this._content == x.toString()
