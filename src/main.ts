@@ -1,62 +1,11 @@
 import { BigNumber } from 'bignumber.js'
 import bs58check from 'bs58check';
 
-/* Micheline -------------------------------------------------------------- */
 /*
 ** source: ./lib_protocol/michelson_v1_primitives.ml
 */
 
-export type Mprim = {
-  "prim": "True" | "False" | "None" | "Unit"
-}
-
-export type Mstring = {
-  "string": string
-}
-
-export type Mbytes = {
-  "bytes": string
-}
-
-export type Mint = {
-  "int": string
-}
-
-export type Mpair = {
-  "prim": "Pair",
-  "args": Array<Micheline>
-}
-
-export type Melt = {
-  "prim": "Elt",
-  "args": [Micheline, Micheline]
-}
-
-export type Msingle = {
-  "prim": "Some" | "Right" | "Left",
-  "args": [Micheline]
-}
-
-export type MMichelson = {
-  "prim": "PACK" | "UNPACK" | "BLAKE2B" | "SHA256" | "SHA512" | "ABS" | "ADD" | "AMOUNT" | "AND" | "BALANCE" | "CAR" | "CDR" | "CHAIN_ID" | "CHECK_SIGNATURE" | "COMPARE" | "CONCAT" | "CONS" | "CREATE_ACCOUNT" | "CREATE_CONTRACT" | "IMPLICIT_ACCOUNT" | "DIP" | "DROP" | "DUP" | "VIEW" | "EDIV" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "EQ" | "EXEC" | "APPLY" | "FAILWITH" | "GE" | "GET" | "GET_AND_UPDATE" | "GT" | "HASH_KEY" | "IF" | "IF_CONS" | "IF_LEFT" | "IF_NONE" | "INT" | "LAMBDA" | "LAMBDA_REC" | "LE" | "LEFT" | "LEVEL" | "LOOP" | "LSL" | "LSR" | "LT" | "MAP" | "MEM" | "MUL" | "NEG" | "NEQ" | "NIL" | "NONE" | "NOT" | "NOW" | "MIN_BLOCK_TIME" | "OR" | "PAIR" | "UNPAIR" | "PUSH" | "RIGHT" | "SIZE" | "SOME" | "SOURCE" | "SENDER" | "SELF" | "SELF_ADDRESS" | "SLICE" | "STEPS_TO_QUOTA" | "SUB" | "SUB_MUTEZ" | "SWAP" | "TRANSFER_TOKENS" | "SET_DELEGATE" | "UNIT" | "UPDATE" | "XOR" | "ITER" | "LOOP_LEFT" | "ADDRESS" | "CONTRACT" | "ISNAT" | "CAST" | "RENAME" | "SAPLING_EMPTY_STATE" | "SAPLING_VERIFY_UPDATE" | "DIG" | "DUG" | "NEVER" | "VOTING_POWER" | "TOTAL_VOTING_POWER" | "KECCAK" | "SHA3" | "PAIRING_CHECK" | "TICKET" | "TICKET_DEPRECATED" | "READ_TICKET" | "SPLIT_TICKET" | "JOIN_TICKETS" | "OPEN_CHEST" | "EMIT"
-  "args"?: Array<Micheline>
-  "annots"?: Array<string>
-}
-
-export type Marray = Array<Micheline>
-
-export type Micheline =
-  | Mprim
-  | Mstring
-  | Mbytes
-  | Mint
-  | Msingle
-  | Mpair
-  | Melt
-  | Marray
-  | MMichelson
-
-/* Michleline Type --------------------------------------------------------- */
+/* Micheline Type --------------------------------------------------------- */
 
 export type MTprim = {
   "prim": "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" |
@@ -97,6 +46,72 @@ export type MichelineType =
   | MTint
   | MTpair
   | MTPairArray
+
+/* Micheline -------------------------------------------------------------- */
+
+export type Mprim = {
+  "prim": "True" | "False" | "None" | "Unit"
+}
+
+export type Mstring = {
+  "string": string
+}
+
+export type Mbytes = {
+  "bytes": string
+}
+
+export type Mint = {
+  "int": string
+}
+
+export type Mpair = {
+  "prim": "Pair",
+  "args": Array<Micheline>
+}
+
+export type Melt = {
+  "prim": "Elt",
+  "args": [Micheline, Micheline]
+}
+
+export type Msingle = {
+  "prim": "Some" | "Right" | "Left",
+  "args": [Micheline]
+}
+
+export type MMichelson = {
+  "prim": "PACK" | "UNPACK" | "BLAKE2B" | "SHA256" | "SHA512" | "ABS" | "ADD" | "AMOUNT" | "AND" | "BALANCE" | "CAR" | "CDR" | "CHAIN_ID" | "CHECK_SIGNATURE" | "COMPARE" | "CONCAT" | "CONS" | "CREATE_ACCOUNT" | "CREATE_CONTRACT" | "IMPLICIT_ACCOUNT" | "DIP" | "DROP" | "DUP" | "VIEW" | "EDIV" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "EQ" | "EXEC" | "APPLY" | "FAILWITH" | "GE" | "GET" | "GET_AND_UPDATE" | "GT" | "HASH_KEY" | "IF" | "IF_CONS" | "IF_LEFT" | "IF_NONE" | "INT" | "LAMBDA" | "LAMBDA_REC" | "LE" | "LEFT" | "LEVEL" | "LOOP" | "LSL" | "LSR" | "LT" | "MAP" | "MEM" | "MUL" | "NEG" | "NEQ" | "NIL" | "NONE" | "NOT" | "NOW" | "MIN_BLOCK_TIME" | "OR" | "PAIR" | "UNPAIR" | "PUSH" | "RIGHT" | "SIZE" | "SOME" | "SOURCE" | "SENDER" | "SELF" | "SELF_ADDRESS" | "SLICE" | "STEPS_TO_QUOTA" | "SUB" | "SUB_MUTEZ" | "SWAP" | "TRANSFER_TOKENS" | "SET_DELEGATE" | "UNIT" | "UPDATE" | "XOR" | "ITER" | "LOOP_LEFT" | "ADDRESS" | "CONTRACT" | "ISNAT" | "CAST" | "RENAME" | "SAPLING_EMPTY_STATE" | "SAPLING_VERIFY_UPDATE" | "DIG" | "DUG" | "NEVER" | "VOTING_POWER" | "TOTAL_VOTING_POWER" | "KECCAK" | "SHA3" | "PAIRING_CHECK" | "TICKET" | "TICKET_DEPRECATED" | "READ_TICKET" | "SPLIT_TICKET" | "JOIN_TICKETS" | "OPEN_CHEST" | "EMIT"
+  "args"?: Array<Micheline>
+  "annots"?: Array<string>
+}
+
+export type MMichelineK = {
+  "prim": "parameter" | "storage" | "code" | "view"
+  "args"?: Array<Micheline>
+  "annots"?: Array<string>
+}
+
+export type Mother = {
+  "prim": "Lambda_rec" | "constant"
+  "args"?: Array<Micheline>
+  "annots"?: Array<string>
+}
+
+export type Marray = Array<Micheline>
+
+export type Micheline =
+  | Mprim
+  | Mstring
+  | Mbytes
+  | Mint
+  | Msingle
+  | Mpair
+  | Melt
+  | Marray
+  | MMichelson
+  | MichelineType
+  | Mother
 
 export type ArchetypeTypeArg = ArchetypeType | Array<ArchetypeTypeArg> | string | Date | boolean
 
