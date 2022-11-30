@@ -76,24 +76,24 @@ export type Melt = {
 }
 
 export type Msingle = {
-  "prim": "Some" | "Right" | "Left",
+  "prim": "Some" | "Right" | "Left" | "Lambda_rec",
   "args": [Micheline]
 }
 
-export type MMichelson = {
+export type MMichelineInstr = {
   "prim": "PACK" | "UNPACK" | "BLAKE2B" | "SHA256" | "SHA512" | "ABS" | "ADD" | "AMOUNT" | "AND" | "BALANCE" | "CAR" | "CDR" | "CHAIN_ID" | "CHECK_SIGNATURE" | "COMPARE" | "CONCAT" | "CONS" | "CREATE_ACCOUNT" | "CREATE_CONTRACT" | "IMPLICIT_ACCOUNT" | "DIP" | "DROP" | "DUP" | "VIEW" | "EDIV" | "EMPTY_BIG_MAP" | "EMPTY_MAP" | "EMPTY_SET" | "EQ" | "EXEC" | "APPLY" | "FAILWITH" | "GE" | "GET" | "GET_AND_UPDATE" | "GT" | "HASH_KEY" | "IF" | "IF_CONS" | "IF_LEFT" | "IF_NONE" | "INT" | "LAMBDA" | "LAMBDA_REC" | "LE" | "LEFT" | "LEVEL" | "LOOP" | "LSL" | "LSR" | "LT" | "MAP" | "MEM" | "MUL" | "NEG" | "NEQ" | "NIL" | "NONE" | "NOT" | "NOW" | "MIN_BLOCK_TIME" | "OR" | "PAIR" | "UNPAIR" | "PUSH" | "RIGHT" | "SIZE" | "SOME" | "SOURCE" | "SENDER" | "SELF" | "SELF_ADDRESS" | "SLICE" | "STEPS_TO_QUOTA" | "SUB" | "SUB_MUTEZ" | "SWAP" | "TRANSFER_TOKENS" | "SET_DELEGATE" | "UNIT" | "UPDATE" | "XOR" | "ITER" | "LOOP_LEFT" | "ADDRESS" | "CONTRACT" | "ISNAT" | "CAST" | "RENAME" | "SAPLING_EMPTY_STATE" | "SAPLING_VERIFY_UPDATE" | "DIG" | "DUG" | "NEVER" | "VOTING_POWER" | "TOTAL_VOTING_POWER" | "KECCAK" | "SHA3" | "PAIRING_CHECK" | "TICKET" | "TICKET_DEPRECATED" | "READ_TICKET" | "SPLIT_TICKET" | "JOIN_TICKETS" | "OPEN_CHEST" | "EMIT"
   "args"?: Array<Micheline>
   "annots"?: Array<string>
 }
 
-export type MMichelineK = {
+export type MMichelineKeyword = {
   "prim": "parameter" | "storage" | "code" | "view"
   "args"?: Array<Micheline>
   "annots"?: Array<string>
 }
 
-export type Mother = {
-  "prim": "Lambda_rec" | "constant"
+export type MMichelineConstantHash = {
+  "prim": "constant"
   "args"?: Array<Micheline>
   "annots"?: Array<string>
 }
@@ -109,9 +109,10 @@ export type Micheline =
   | Mpair
   | Melt
   | Marray
-  | MMichelson
   | MichelineType
-  | Mother
+  | MMichelineInstr
+  | MMichelineKeyword
+  | MMichelineConstantHash
 
 export type ArchetypeTypeArg = ArchetypeType | Array<ArchetypeTypeArg> | string | Date | boolean
 
