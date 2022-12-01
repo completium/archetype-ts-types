@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash } from '../src/main'
+import { Address, Chain_id, TezDate, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash } from '../src/main'
 
 describe('ArchetypeType', () => {
 
@@ -149,6 +149,29 @@ describe('Chain_id', () => {
     })
 
   })
+
+
+  describe('tezDate', () => {
+
+    test('Sucessfully add durations to tezDates', () => {
+      const now = new Date()
+      const tezDate = new TezDate(now).addDuration(new Duration('2m'))
+      const roundedToMinute = new Date(now.setMinutes(0,0,0))
+      const nativeDate = new Date(roundedToMinute.getMinutes() + 2)
+      console.log(nativeDate == tezDate.toDate())
+
+    });
+
+    test('Sucessfully add duration string to tezDates', () => {
+      const now = new Date()
+      const tezDate = new TezDate(now).addDurationString('2m')
+      const roundedToMinute = new Date(now.setMinutes(0,0,0))
+      const nativeDate = new Date(roundedToMinute.getMinutes() + 2)
+      console.log(nativeDate == tezDate.toDate())
+
+    });
+  })
+
 
   describe('Key', () => {
     test('Fails with empty string', () => {
