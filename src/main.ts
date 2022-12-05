@@ -443,25 +443,27 @@ export class Duration implements ArchetypeType {
   }
 }
 
+
 export class TezDate implements ArchetypeType {
   private _content: Date
   constructor(v: Date = new Date()) {
-    this._content = new Date(v.setSeconds(0,0))
+    this._content = new Date(v.getTime() - v.getMilliseconds())
   }
   equals(x: TezDate): boolean {
-    return this.toSeconds() === x.toSeconds()
+    return this.toSecond() === x.toSecond()
   }
-  toSeconds(): number {
-    return this._content.setSeconds(0,0)
+  toSecond(): number {
+    return this._content.getTime() / 1000
   }
-  addDuration(x: Duration): TezDate {
-    return new TezDate(new Date(this._content.setSeconds(0,0) + x.toSecond()*1000))
-  }
-  addDurationString(x : string) : TezDate {
+  addDuration(dur: Duration): TezDate {
+    return new TezDate(
+      new Date(this.toSecond()*1000 + dur.toSecond()*1000) 
+  )}
+  addDurationLiteral(x : string) : TezDate {
     return this.addDuration(new Duration(x))
   }
   toDate(): Date { 
-    return new Date(this.toSeconds())
+    return new Date(this._content)
   }
 }
 
