@@ -1,6 +1,6 @@
+import {cmp_date } from './../src/main';
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash } from '../src/main'
-
+import { Address, Chain_id, TezDate, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash } from '../src/main'
 describe('ArchetypeType', () => {
 
   describe('Address', () => {
@@ -149,6 +149,37 @@ describe('Chain_id', () => {
     })
 
   })
+
+  describe('tezDate', () => {
+
+    test('Convert Date to TezDate and back again succesfully ', () => {
+      const native_date_now = new Date()
+      const tez_date_now = new TezDate(native_date_now)
+      const native_date_now_two = tez_date_now.toDate()
+      expect(cmp_date(native_date_now, native_date_now_two)).toEqual(true)
+    });
+
+      test('Sucessfully add durations to a TezDate', () => {
+      const MINUTES = 2
+      const native_date_now = new Date()
+      const native_date_soon = new Date(native_date_now.getTime() + MINUTES*60000)
+      const tez_date_now = new TezDate(native_date_now)
+      const tez_date_soon = tez_date_now.addDuration(new Duration(`${MINUTES}m`))
+      expect(cmp_date(tez_date_soon.toDate(), native_date_soon)).toEqual(true)
+
+    });
+
+    test('Sucessfully add duration string to a TezDate', () => {
+      const MINUTES = 2
+      const native_date_now = new Date()
+      const native_date_soon = new Date(native_date_now.getTime() + MINUTES*60000)
+      const tez_date_now = new TezDate(native_date_now)
+      const tez_date_soon = tez_date_now.addDurationLiteral(`${MINUTES}m`)
+      expect(cmp_date(tez_date_soon.toDate(), native_date_soon)).toEqual(true)
+    }); 
+  })
+
+
 
   describe('Key', () => {
     test('Fails with empty string', () => {
