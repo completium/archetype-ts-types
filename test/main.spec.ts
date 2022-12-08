@@ -98,10 +98,6 @@ describe('Chain_id', () => {
       expect(() => { new Duration("dummy") }).toThrow("Invalid duration input. Received input: `dummy' Try this format: '_w_d_h_m_s'.")
     });
 
-    test('Fails with number string', () => {
-      expect(() => { new Duration("0") }).toThrow("Invalid duration input. Received input: `0' Try this format: '_w_d_h_m_s'.")
-    });
-
     test('Fails with typo in unit letter', () => {
       const input = "3g8d4h34m18s"
       expect(() => { new Duration(input) }).toThrow("Invalid duration input. Received input: `" + input + "' Try this format: '_w_d_h_m_s'.")
@@ -147,6 +143,10 @@ describe('Chain_id', () => {
     it('3 weeks, 8 days, 4 hours, 34 minutes, 18 seconds test', () => {
       expect(new Duration("3w8d4h34m18s").toSecond()).toBe(2522058)
     })
+
+    test('2 minutes in second string', () => {
+      expect(new Duration("120").toSecond()).toBe(120)
+    });
 
   })
 
@@ -364,6 +364,11 @@ describe('Chain_id', () => {
 
     test('Succeeds with Valid p2sig Signature', () => {
       const input = "p2siguNBbkRwuMKCyG9NeQb4ETNCDyqUnUCX4T4Um4dFgzCKyA7AzS4a6XBk1Encj4ndXsbK98UYNunZ7vHHFHMhh7jdajUHTY"
+      expect(new Signature(input).toString()).toBe(input)
+    })
+
+    test('Succeeds with Valid sig Signature', () => {
+      const input = "sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1"
       expect(new Signature(input).toString()).toBe(input)
     })
 

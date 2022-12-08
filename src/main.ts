@@ -426,6 +426,11 @@ export class Duration implements ArchetypeType {
     }, false)
   }
   private convert_duration_literal_to_seconds(input: string) {
+    const regexpDigits = new RegExp(/^\d+$/);
+    const valueDigits = input.match(regexpDigits)
+    if (valueDigits != null) {
+      return Number.parseInt(valueDigits[0], 10)
+    }
 
     if (!this.is_duration_valid(input))
       throw new Error("Invalid duration input. Received input: `" + input + "' Try this format: '_w_d_h_m_s'.")
@@ -805,6 +810,7 @@ export class Signature implements ArchetypeType {
     return this._content
   }
   private signature_prefixes: { [char: string]: number } = {
+    sig: 64,
     edsig: 64,
     spsig: 64,
     p2sig: 63,
