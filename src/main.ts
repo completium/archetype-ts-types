@@ -1073,6 +1073,22 @@ export const list_annot_to_mich_type = (mt: MichelineType, a: Array<string>): Mi
   }
 }
 
+export const set_to_mich_type = (mt: MichelineType): MichelineType => {
+  return {
+    prim: "set",
+    args: [mt],
+    annots: []
+  }
+}
+
+export const set_annot_to_mich_type = (mt: MichelineType, a: Array<string>): MichelineType => {
+  return {
+    prim: "set",
+    args: [mt],
+    annots: a
+  }
+}
+
 export const set_to_mich = <T>(s: Set<T>, to_json: { (a: T): Micheline }) => {
   Array.from(s.values()).map(x => to_json(x))
 }
