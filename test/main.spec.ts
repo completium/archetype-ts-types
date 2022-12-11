@@ -1,5 +1,32 @@
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals } from '../src/main'
+
+describe('Micheline', () => {
+  // test('int int true', () => {
+  //   const a = { "int": "2" };
+  //   const b = { "int": "2" };
+  //   expect(micheline_equals(a, b)).toBe(true);
+  // })
+
+  test('int int false', () => {
+    const a = { "int": "2" };
+    const b = { "int": "3" };
+    expect(micheline_equals(a, b)).toBe(false);
+  })
+
+  test('int string false', () => {
+    const a = { "int": "2" };
+    const b = { "string": "toto" };
+    expect(micheline_equals(a, b)).toBe(false);
+  })
+
+  test('int string with same value false', () => {
+    const a = { "int": "2" };
+    const b = { "string": "2" };
+    expect(micheline_equals(a, b)).toBe(false);
+  })
+
+})
 
 describe('ArchetypeType', () => {
 
@@ -55,7 +82,7 @@ describe('ArchetypeType', () => {
     })
   });
 
-describe('Chain_id', () => {
+  describe('Chain_id', () => {
     test('Fails with empty string', () => {
       const input = ""
       expect(() => { new Chain_id(input) }).toThrow(`No matching prefix found. Received input: ${input}`)

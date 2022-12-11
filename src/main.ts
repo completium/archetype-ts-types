@@ -175,6 +175,10 @@ export const some_to_mich = (a: Micheline): Micheline => {
 
 /* Utils ------------------------------------------------------------------- */
 
+export const micheline_equals = (lhs: Micheline, rhs: Micheline): boolean => {
+  return JSON.stringify(lhs, null, 0) == JSON.stringify(rhs, null, 0)
+}
+
 export const list_equals = <T>(l1: Array<T>, l2: Array<T>, cmp: { (e1: T, e2: T): boolean }): boolean => {
   if (l1.length == l2.length) {
     for (let i = 0; i < l1.length; i++) {
