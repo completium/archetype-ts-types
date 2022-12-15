@@ -2,11 +2,11 @@ import BigNumber from 'bignumber.js';
 import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals } from '../src/main'
 
 describe('Micheline', () => {
-  // test('int int true', () => {
-  //   const a = { "int": "2" };
-  //   const b = { "int": "2" };
-  //   expect(micheline_equals(a, b)).toBe(true);
-  // })
+  test('int int true', () => {
+    const a = { "int": "2" };
+    const b = { "int": "2" };
+    expect(micheline_equals(a, b)).toBe(true);
+  })
 
   test('int int false', () => {
     const a = { "int": "2" };
