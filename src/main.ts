@@ -1279,6 +1279,6 @@ export const mich_to_or_value = (x: Micheline): Micheline => {
   return (x as Msingle)["args"][0]
 }
 
-export const cmp_date = (a: Date, b: Date): boolean => {
+export const date_cmp = (a: Date, b: Date): boolean => {
   return (a.getTime() - a.getMilliseconds()) == (b.getTime() - b.getMilliseconds())
 }
