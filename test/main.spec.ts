@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, mich_to_ticket, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals } from '../src/main'
 
 describe('Micheline', () => {
   test('int int true', () => {
@@ -317,7 +317,7 @@ describe('ArchetypeType', () => {
           ]
         };
 
-        const ticket_actual = mich_to_ticket<string>(tjson, (x: Micheline): string => { return (x as Mstring).string });
+        const ticket_actual = Ticket.from_mich<string>(tjson, (x: Micheline): string => { return (x as Mstring).string });
         expect(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), ("info" as string), new Nat(1)).equals(ticket_actual)).toBe(true)
         expect(new Ticket(new Address("KT1XcpRnLQANuGCJ9SZW3GXVG8BArUKymqtk"), ("info" as string), new Nat(1)).equals(ticket_actual)).toBe(false)
         expect(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), ("infu" as string), new Nat(1)).equals(ticket_actual)).toBe(false)

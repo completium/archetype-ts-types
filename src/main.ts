@@ -234,6 +234,9 @@ export class Address implements ArchetypeType {
   to_mich(): Micheline {
     return string_to_mich(this._content)
   }
+  static from_mich(x: Micheline): Address {
+    return new Address((x as Mstring)["string"])
+  }
   equals(a: Address): boolean {
     return this._content == a.toString()
   }
@@ -254,6 +257,9 @@ export class Bls12_381_fr implements ArchetypeType {
       "bytes": this._content
     }
   }
+  static from_mich(x: Micheline): Bls12_381_fr {
+    return new Bls12_381_fr((x as Mbytes)["bytes"])
+  }
   equals = (x: Bls12_381_fr): boolean => {
     return this._content == x.toString()
   }
@@ -272,6 +278,9 @@ export class Bls12_381_g1 implements ArchetypeType {
     return {
       "bytes": this._content
     }
+  }
+  static from_mich(x: Micheline): Bls12_381_g1 {
+    return new Bls12_381_g1((x as Mbytes)["bytes"])
   }
   equals = (x: Bls12_381_g1): boolean => {
     return this._content == x.toString()
@@ -292,6 +301,9 @@ export class Bls12_381_g2 implements ArchetypeType {
       "bytes": this._content
     }
   }
+  static from_mich(x: Micheline): Bls12_381_g2 {
+    return new Bls12_381_g2((x as Mbytes)["bytes"])
+  }
   equals = (x: Bls12_381_g2): boolean => {
     return this._content == x.toString()
   }
@@ -310,6 +322,9 @@ export class Bytes implements ArchetypeType {
     return {
       "bytes": this._content
     }
+  }
+  static from_mich(x: Micheline): Bytes {
+    return new Bytes((x as Mbytes)["bytes"])
   }
   equals = (x: Bytes): boolean => {
     return this._content == x.toString()
@@ -346,6 +361,9 @@ export class Chain_id implements ArchetypeType {
       "string": this._content
     }
   }
+  static from_mich(x: Micheline): Chain_id {
+    return new Chain_id((x as Mstring)["string"])
+  }
   equals = (x: Chain_id): boolean => {
     return this._content == x.toString()
   }
@@ -368,6 +386,9 @@ export class Chest implements ArchetypeType {
       "bytes": this._content
     }
   }
+  static from_mich(x: Micheline): Chest {
+    return new Chest((x as Mbytes)["bytes"])
+  }
   equals = (x: Chest): boolean => {
     return this._content == x.toString()
   }
@@ -387,6 +408,9 @@ export class Chest_key implements ArchetypeType {
       "bytes": this._content
     }
   }
+  static from_mich(x: Micheline): Chest_key {
+    return new Chest_key((x as Mbytes)["bytes"])
+  }
   equals = (x: Chest_key): boolean => {
     return this._content == x.toString()
   }
@@ -402,6 +426,9 @@ export class Duration implements ArchetypeType {
   }
   to_mich(): Micheline {
     return { "int": this._content.toString() }
+  }
+  static from_mich(x: Micheline): Duration {
+    return new Duration((x as Mint)["int"])
   }
   equals(a: Duration): boolean {
     return this._content.toString() == a.toString()
@@ -490,6 +517,9 @@ export class Int implements ArchetypeType {
   to_mich = (): Micheline => {
     return { "int": this._content.toFixed() }
   }
+  static from_mich(x: Micheline): Int {
+    return new Int((x as Mint)["int"])
+  }
   to_big_number(): BigNumber {
     return this._content
   }
@@ -526,6 +556,9 @@ export class Key implements ArchetypeType {
       "string": this._content
     }
   }
+  static from_mich(x: Micheline): Key {
+    return new Key((x as Mstring)["string"])
+  }
   equals = (x: Key): boolean => {
     return this._content == x.toString()
   }
@@ -547,6 +580,9 @@ export class Key_hash implements ArchetypeType {
   to_mich(): Micheline {
     return string_to_mich(this._content)
   }
+  static from_mich(x: Micheline): Key_hash {
+    return new Key_hash((x as Mstring)["string"])
+  }
   equals = (x: Key_hash): boolean => {
     return this._content == x.toString()
   }
@@ -565,6 +601,9 @@ export class Nat implements ArchetypeType {
   }
   to_mich = (): Micheline => {
     return { "int": this._content.toFixed() }
+  }
+  static from_mich(x: Micheline): Nat {
+    return new Nat((x as Mint)["int"])
   }
   to_big_number(): BigNumber {
     return this._content
@@ -619,6 +658,15 @@ export class Option<T extends ArchetypeTypeArg> implements ArchetypeType {
     const mich = f(this._content)
     return some_to_mich(mich)
   };
+  static from_mich<T extends ArchetypeTypeArg>(x: Micheline, mich_to: (_: any) => T): Option<T> {
+    if ("prim" in x) {
+      switch (x.prim) {
+        case "None": return new Option<T>(undefined)
+        case "Some": return new Option<T>(mich_to(x.args[0]))
+      }
+    }
+    throw new Error("Option.from_mich: prim not found")
+  }
   equals = (o: Option<T>) => {
     return this.toString() == o.toString()
   }
@@ -675,6 +723,16 @@ export class Or<T1 extends ArchetypeTypeArg, T2 extends ArchetypeTypeArg> implem
       return right_to_mich(mich)
     }
   }
+  static from_mich<T1 extends ArchetypeType, T2 extends ArchetypeType>(x: Micheline, mich_to_left: ((_: Micheline) => T1), mich_to_right: ((_: Micheline) => T2)): Or<T1, T2> {
+    const p = (x as Msingle);
+    if (p.prim == "Left") {
+      return Or.Left<T1, T2>(mich_to_left(p.args[0]))
+    }
+    if (p.prim == "Right") {
+      return Or.Right<T1, T2>(mich_to_right(p.args[0]))
+    }
+    throw new Error(`Or.from_mich: Invalid prim ${p.prim}`)
+  }
   toString(): string {
     let str: string
     switch (typeof this._content) {
@@ -727,6 +785,11 @@ export class Rational implements ArchetypeType {
       ]
     }
   }
+  static from_mich(x: Micheline): Rational {
+    const numerator = new BigNumber(((x as Mpair).args[0] as Mint)["int"])
+    const denominator = new BigNumber(((x as Mpair).args[1] as Mint)["int"])
+    return new Rational(numerator.dividedBy(denominator))
+  }
   to_big_number(): BigNumber {
     return this._content
   }
@@ -770,6 +833,9 @@ export class Sapling_state implements ArchetypeType {
       "bytes": this._content
     }
   }
+  static from_mich(x: Micheline): Sapling_state {
+    return new Sapling_state((x as Mbytes)["bytes"])
+  }
   equals = (x: Sapling_state): boolean => {
     return this._content == x.toString()
   }
@@ -789,6 +855,9 @@ export class Sapling_transaction implements ArchetypeType {
       "bytes": this._content
     }
   }
+  static from_mich(x: Micheline): Sapling_transaction {
+    return new Sapling_transaction((x as Mbytes)["bytes"])
+  }
   equals = (x: Sapling_transaction): boolean => {
     return this._content == x.toString()
   }
@@ -806,6 +875,9 @@ export class Signature implements ArchetypeType {
     return {
       "string": this._content
     }
+  }
+  static from_mich(x: Micheline): Signature {
+    return new Signature((x as Mstring)["string"])
   }
   equals = (x: Signature): boolean => {
     return this._content == x.toString()
@@ -838,6 +910,9 @@ export class Tez implements ArchetypeType {
   }
   to_mich = (): Micheline => {
     return { "int": this.toString() }
+  }
+  static from_mich(x: Micheline): Tez {
+    return new Tez((x as Mint)["int"], "mutez")
   }
   to_big_number(): BigNumber {
     return this._content
@@ -874,6 +949,12 @@ export class Ticket<T extends ArchetypeTypeArg> implements ArchetypeType {
     const arg_amount: Mint = { "int": this.amount.toString() };
     return { prim: "Pair", args: [arg_ticketer, arg_contents, arg_amount] }
   };
+  static from_mich<T extends ArchetypeType>(x: Micheline, mich_to: (_: Micheline) => T): Ticket<T> {
+    const source = new Address(((x as Mpair).args[0] as Mstring)["string"])
+    const value = mich_to((x as Mpair).args[1]);
+    const amount = new Nat(((x as Mpair).args[2] as Mint)["int"])
+    return new Ticket<T>(source, value, amount)
+  }
   equals = (t: Ticket<T>) => {
     return this.toString() == t.toString()
   }
@@ -891,6 +972,9 @@ export class Tx_rollup_l2_address implements ArchetypeType {
   to_mich(): Micheline {
     return string_to_mich(this._content)
   }
+  static from_mich(x: Micheline): Tx_rollup_l2_address {
+    return new Tx_rollup_l2_address((x as Mstring)["string"])
+  }
   equals(a: Tx_rollup_l2_address): boolean {
     return this._content == a.toString()
   }
@@ -904,6 +988,9 @@ export class Unit implements ArchetypeType {
     return {
       "prim": "Unit"
     }
+  }
+  static from_mich(x: Micheline): Unit {
+    return new Unit()
   }
   equals = (x: Unit): boolean => {
     return true
@@ -1102,7 +1189,11 @@ export const string_cmp = (a: string, b: string) => {
     return 0;
   }
   return a < b ? -1 : 1;
-};
+}
+
+export const date_cmp = (a: Date, b: Date): boolean => {
+  return (a.getTime() - a.getMilliseconds()) == (b.getTime() - b.getMilliseconds())
+}
 
 export const mich_to_pairs = (x: Micheline): Array<Micheline> => {
   return (x as Mpair)["args"]
@@ -1136,42 +1227,6 @@ export const mich_to_date = (x: Micheline): Date => {
   return new Date((x as Mstring)["string"])
 }
 
-export const mich_to_int = (x: Micheline): Int => {
-  return new Int((x as Mint)["int"])
-}
-
-export const mich_to_nat = (x: Micheline): Nat => {
-  return new Nat((x as Mint)["int"])
-}
-
-export const mich_to_signature = (x: Micheline): Signature => {
-  return new Signature((x as Mstring)["string"])
-}
-
-export const mich_to_key = (x: Micheline): Key => {
-  return new Key((x as Mstring)["string"])
-}
-
-export const mich_to_tez = (x: Micheline): Tez => {
-  return new Tez((x as Mint)["int"], "mutez")
-}
-
-export const mich_to_bytes = (x: Micheline): Bytes => {
-  return new Bytes((x as Mbytes)["bytes"])
-}
-
-export const mich_to_duration = (x: Micheline): Duration => {
-  return new Duration((x as Mint)["int"])
-}
-
-export const mich_to_address = (x: Micheline): Address => {
-  return new Address((x as Mstring)["string"])
-}
-
-export const mich_to_tx_rollup_l2_address = (x: Micheline): Tx_rollup_l2_address => {
-  return new Tx_rollup_l2_address((x as Mstring)["string"])
-}
-
 export const mich_to_bool = (x: Micheline): boolean => {
   switch ((x as Mprim).prim) {
     case "False": return false
@@ -1180,83 +1235,9 @@ export const mich_to_bool = (x: Micheline): boolean => {
   }
 }
 
-export const mich_to_bls12_381_fr = (x: Micheline): Bls12_381_fr => {
-  return new Bls12_381_fr((x as Mbytes)["bytes"])
-}
-
-export const mich_to_bls12_381_g1 = (x: Micheline): Bls12_381_g1 => {
-  return new Bls12_381_g1((x as Mbytes)["bytes"])
-}
-
-export const mich_to_bls12_381_g2 = (x: Micheline): Bls12_381_g2 => {
-  return new Bls12_381_g2((x as Mbytes)["bytes"])
-}
-
-export const mich_to_chain_id = (x: Micheline): Chain_id => {
-  return new Chain_id((x as Mstring)["string"])
-}
-
-export const mich_to_chest = (x: Micheline): Chest => {
-  return new Chest((x as Mbytes)["bytes"])
-}
-
-export const mich_to_chest_key = (x: Micheline): Chest_key => {
-  return new Chest_key((x as Mbytes)["bytes"])
-}
-
-export const mich_to_key_hash = (x: Micheline): Key_hash => {
-  return new Key_hash((x as Mstring)["string"])
-}
-
-export const mich_to_sapling_state = (x: Micheline): Sapling_state => {
-  return new Sapling_state((x as Mbytes)["bytes"])
-}
-
-export const mich_to_sapling_transaction = (x: Micheline): Sapling_transaction => {
-  return new Sapling_transaction((x as Mbytes)["bytes"])
-}
-
-export const mich_to_unit = (x: Micheline): Unit => {
-  return new Unit()
-}
-
-export const mich_to_or = <T1 extends ArchetypeType, T2 extends ArchetypeType>(x: Micheline, mich_to_left: ((_: Micheline) => T1), mich_to_right: ((_: Micheline) => T2)): Or<T1, T2> => {
-  const p = (x as Msingle);
-  if (p.prim == "Left") {
-    return Or.Left<T1, T2>(mich_to_left(p.args[0]))
-  }
-  if (p.prim == "Right") {
-    return Or.Right<T1, T2>(mich_to_right(p.args[0]))
-  }
-  throw new Error(`mich_to_or: Invalid prim ${p.prim}`)
-}
-
-export const mich_to_option = <T extends ArchetypeTypeArg>(x: Micheline, mich_to: (_: any) => T): Option<T> => {
-  if ("prim" in x) {
-    switch (x.prim) {
-      case "None": return new Option<T>(undefined)
-      case "Some": return new Option<T>(mich_to(x.args[0]))
-    }
-  }
-  throw new Error("mich_to_option: prim not found")
-}
-
 export const mich_to_list = <T>(x: Micheline, mich_to: (_: Micheline) => T): Array<T> => {
   const xlist = (x as Marray)
   return xlist.map(mich_to)
-}
-
-export const mich_to_rational = (x: Micheline): Rational => {
-  const numerator = new BigNumber(((x as Mpair).args[0] as Mint)["int"])
-  const denominator = new BigNumber(((x as Mpair).args[1] as Mint)["int"])
-  return new Rational(numerator.dividedBy(denominator))
-}
-
-export const mich_to_ticket = <T extends ArchetypeType>(x: Micheline, mich_to: (_: Micheline) => T): Ticket<T> => {
-  const source = new Address(((x as Mpair).args[0] as Mstring)["string"])
-  const value = mich_to((x as Mpair).args[1]);
-  const amount = new Nat(((x as Mpair).args[2] as Mint)["int"])
-  return new Ticket<T>(source, value, amount)
 }
 
 export const mich_to_map = <K, V>(x: Micheline, f: { (k: Micheline, v: Micheline): [K, V] }): Array<[K, V]> => {
@@ -1273,12 +1254,4 @@ export const is_left = (x: Micheline): boolean => {
 
 export const is_right = (x: Micheline): boolean => {
   return (x as Msingle)["prim"] == "Right"
-}
-
-export const mich_to_or_value = (x: Micheline): Micheline => {
-  return (x as Msingle)["args"][0]
-}
-
-export const date_cmp = (a: Date, b: Date): boolean => {
-  return (a.getTime() - a.getMilliseconds()) == (b.getTime() - b.getMilliseconds())
 }
