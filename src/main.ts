@@ -124,16 +124,27 @@ export interface OriginateResult {
   address: string
 }
 
+export interface EventData {
+  from: Address,
+  type: MichelineType,
+  tag: string,
+  payload: Micheline,
+  consumed_gas: number
+}
+
 export interface CallResult {
+  events: Array<EventData>,
   dummy: number
 }
 
 export interface BatchResult {
+  events: Array<EventData>,
   dummy: number
 }
 
 export interface GetterResult {
-  value: any
+  value: any,
+  events: Array<EventData>,
   dummy: number
 }
 
