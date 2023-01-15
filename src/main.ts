@@ -133,8 +133,11 @@ export interface EventData {
 }
 
 export interface CallResult {
-  events: Array<EventData>,
-  dummy: number
+  operation_hash: string,
+  storage_size: number,
+  consumed_gas: number,
+  paid_storage_size_diff: number,
+  events: Array<EventData>
 }
 
 export interface BatchResult {
