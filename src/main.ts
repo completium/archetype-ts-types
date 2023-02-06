@@ -1280,11 +1280,12 @@ export type UnsafeMicheline =
   | Array<UnsafeMicheline>
 
 export const replace_var = (x: UnsafeMicheline, params: Array<[string, Micheline]>): Micheline => {
+  const convert_const = (x : string) : string => {return `const_${x}__`};
   const aux = (x: UnsafeMicheline): Micheline => {
     if ((x as { var: string }).var) {
       const id = (x as { var: string }).var
       const v = params.reduce((accu: (Micheline | null), x: [string, Micheline]) => {
-        if (x[0] == id) {
+        if (x[0] == id || convert_const(x[0]) == id) {
           return x[1]
         } else {
           return accu

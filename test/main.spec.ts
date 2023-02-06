@@ -545,4 +545,59 @@ describe('Utils', () => {
     const res = replace_var(um, vars);
     expect(JSON.stringify(res)).toBe('{"prim":"Pair","args":[{"string":"tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"},{"string":"KT19pGLFUnn2tBF1QY41Sxyr7UnahrNGfULd"},{"prim":"None"},{"prim":"False"},[{"prim":"Elt","args":[{"int":"0"},{"prim":"Pair","args":[{"int":"0"},[{"prim":"Elt","args":[{"string":""},{"bytes":"697066733a2f2f516d617635756142437a4d77377871446f55364d444534743473695855484e4737664a68474c746f79774b35694a"}]}]]}]}],[{"prim":"Elt","args":[{"string":"tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb"},{"int":"123000000000000"}]}],[],[{"prim":"Elt","args":[{"string":""},{"bytes":""}]}]]}')
   })
+
+  test('complex', () => {
+    const um: UnsafeMicheline = [
+      {
+        "prim": "storage",
+        "args": [
+          { "prim": "nat" }
+        ]
+      },
+      {
+        "prim": "parameter",
+        "args": [
+          {
+            "prim": "unit",
+            "annots": [
+              "%exec"
+            ]
+          }
+        ]
+      },
+      {
+        "prim": "code",
+        "args": [
+          [{ "prim": "CDR" },
+          {
+            "prim": "PUSH",
+            "args": [
+              { "prim": "nat" },
+              { "var": "const_n__" }
+            ]
+          },
+          { "prim": "SWAP" },
+          {
+            "prim": "DROP",
+            "args": [
+              { "int": "1" }
+            ]
+          },
+          {
+            "prim": "NIL",
+            "args": [
+              { "prim": "operation" }
+            ]
+          },
+          { "prim": "PAIR" }]
+        ]
+      }];
+    const vars: Array<[string, Micheline]> = [
+      ["n", { "int": "2" }]
+    ];
+    const res = replace_var(um, vars);
+    expect(JSON.stringify(res)).toBe('[{"prim":"storage","args":[{"prim":"nat"}]},{"prim":"parameter","args":[{"prim":"unit","annots":["%exec"]}]},{"prim":"code","args":[[{"prim":"CDR"},{"prim":"PUSH","args":[{"prim":"nat"},{"int":"2"}]},{"prim":"SWAP"},{"prim":"DROP","args":[{"int":"1"}]},{"prim":"NIL","args":[{"prim":"operation"}]},{"prim":"PAIR"}]]}]')
+  })
+
+
 })
