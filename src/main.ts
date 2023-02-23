@@ -917,8 +917,8 @@ export class Tez implements ArchetypeType {
           throw new Error("Mutez value must be integer");
         break
       case "tez":
-        if (this._content.isLessThan(new BigNumber(0)) || this._content.isGreaterThan(new BigNumber("")))
-          throw new Error("Invalid Tez value")
+        if (this._content.isLessThan(new BigNumber(0))) throw new Error("Tez value must not be negative")
+        if (this._content.isGreaterThan(new BigNumber("")) || this._content.isNaN()) throw new Error("Invalid Tez value")
         this._content = new BigNumber(this._content.times(1000000).integerValue(BigNumber.ROUND_FLOOR))
     }
   }
@@ -934,13 +934,17 @@ export class Tez implements ArchetypeType {
   plus(x: Tez): Tez {
     return new Tez(this._content.plus(x.to_big_number()), "mutez")
   }
+  minus(x: Tez): Tez {
+    return new Tez(this._content.minus(x.to_big_number()), "mutez")
+  }
   times(x: Nat): Tez {
     return new Tez(this._content.times(x.to_big_number()), "mutez")
   }
   equals = (x: Tez): boolean => {
     return this._content.isEqualTo(x.to_big_number())
   }
-  toString = (): string => {
+  toString = (unit: "tez" | "mutez" = "mutez"): string => {
+    if (unit == "tez") return this._content.div(1000000).toFixed()
     return this._content.toFixed()
   }
 }
