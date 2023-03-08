@@ -471,7 +471,7 @@ export class Duration implements ArchetypeType {
     }, false)
   }
   private convert_duration_literal_to_seconds(input: string) {
-    const regexpDigits = new RegExp(/^\d+$/);
+    const regexpDigits = new RegExp(/^(-)?\d+$/);
     const valueDigits = input.match(regexpDigits)
     if (valueDigits != null) {
       return Number.parseInt(valueDigits[0], 10)

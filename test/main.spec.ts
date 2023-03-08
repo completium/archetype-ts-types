@@ -175,6 +175,10 @@ describe('ArchetypeType', () => {
       expect(new Duration("120").toSecond()).toBe(120)
     });
 
+    test('Neg 365 days in second string', () => {
+      expect(new Duration("-31536000").toSecond()).toBe(-31536000)
+    });
+
   })
 
   describe('Key', () => {
@@ -374,18 +378,17 @@ describe('ArchetypeType', () => {
       const input = "123"
       expect(new Tez(input).toString()).toEqual("123000000")
     })
-    
+
     describe('toString', () => {
       test('Succeeds with numerical string ', () => {
         const input = "123"
         expect(new Tez(input).toString("tez")).toEqual("123")
       })
-    })  
+    })
 
     test('Succeeds with numerical string ', () => {
       const input = "123123123"
       expect(new Tez(input, "mutez").toString("tez")).toEqual("123.123123")
-      console.log(new Tez(input, "mutez").toString("tez"))
     })
 
     describe('Minus', () => {
