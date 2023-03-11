@@ -354,6 +354,14 @@ describe('ArchetypeType', () => {
         expect(JSON.stringify(new Rational("99999999999999999999999956456456456999999999", new BigNumber("999999999999956456456456999999999")).to_mich())).toBe('{"prim":"Pair","args":[{"int":"5000000000000217717717712832303"},{"int":"50000000000000000000"}]}')
       });
 
+      it('String with big number with denom int', () => {
+        expect(JSON.stringify(new Rational(1, 2).to_mich())).toBe('{"prim":"Pair","args":[{"int":"1"},{"int":"2"}]}')
+      });
+
+      it('String with big number with denom string', () => {
+        expect(JSON.stringify(new Rational(1, "2").to_mich())).toBe('{"prim":"Pair","args":[{"int":"1"},{"int":"2"}]}')
+      });
+
       it('Ticket', () => {
         const f = (x: string): Mstring => { return { "string": x } };
         expect(JSON.stringify(new Ticket(new Address("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"), "info", new Nat(1)).to_mich(f))).toBe('{"prim":"Pair","args":[{"string":"KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe"},{"string":"info"},{"int":"1"}]}')

@@ -774,20 +774,26 @@ export class Or<T1 extends ArchetypeTypeArg, T2 extends ArchetypeTypeArg> implem
 
 export class Rational implements ArchetypeType {
   private _content: BigNumber
-  constructor(v: string | number | BigNumber, denom: BigNumber = new BigNumber(1)) {
-    let numerator: string | number | BigNumber = v
-    switch (typeof v) {
+
+  extract_number = (input: string | number | BigNumber): BigNumber => {
+    switch (typeof input) {
       case "string": {
-        const parsed = v.endsWith('%') ? parseFloat(v) / 100 : v
+        const parsed = input.endsWith('%') ? parseFloat(input) / 100 : input
         if (null !== parsed && !Number.isNaN(parsed)) {
-          numerator = parsed
+          return new BigNumber(parsed)
         } else {
-          throw new Error("Rational error: '" + v + "' not a number")
+          throw new Error("Rational error: '" + input + "' not a number")
         }
-        break;
       }
     }
-    this._content = (new BigNumber(numerator)).div(denom)
+    return new BigNumber(input)
+  }
+
+  constructor(v: string | number | BigNumber, denom: string | number | BigNumber = new BigNumber(1)) {
+    const numerator = this.extract_number(v)
+    const denominator = this.extract_number(denom)
+
+    this._content = numerator.div(denominator)
   }
   to_mich = (): Micheline => {
     const [num, denom] = this._content.toFraction()
@@ -1264,7 +1270,7 @@ export type UnsafeMicheline =
   | Array<UnsafeMicheline>
 
 export const replace_var = (x: UnsafeMicheline, params: Array<[string, Micheline]>): Micheline => {
-  const convert_const = (x : string) : string => {return `const_${x}__`};
+  const convert_const = (x: string): string => { return `const_${x}__` };
   const aux = (x: UnsafeMicheline): Micheline => {
     if ((x as { var: string }).var) {
       const id = (x as { var: string }).var
@@ -1281,7 +1287,7 @@ export const replace_var = (x: UnsafeMicheline, params: Array<[string, Micheline
       return v;
     } if ((x as { args: Array<UnsafeMicheline> }).args) {
       const new_args = (x as { args: Array<UnsafeMicheline> }).args.map(x => replace_var(x, params));
-      return ({...x, args: new_args} as Micheline);
+      return ({ ...x, args: new_args } as Micheline);
     } if ((x as Array<UnsafeMicheline>) && (x as Array<UnsafeMicheline>).length > 0) {
       return (x as Array<UnsafeMicheline>).map(x => replace_var(x, params))
     } else {
