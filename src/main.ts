@@ -850,11 +850,11 @@ export class Sapling_state implements ArchetypeType {
   }
   to_mich(): Micheline {
     return {
-      "bytes": this._content
+      "int": this._content
     }
   }
   static from_mich(x: Micheline): Sapling_state {
-    return new Sapling_state((x as Mbytes)["bytes"])
+    return new Sapling_state((x as Mint)["int"])
   }
   equals = (x: Sapling_state): boolean => {
     return this._content == x.toString()
