@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals, UnsafeMicheline, replace_var, Tez } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals, UnsafeMicheline, replace_var, Tez, normalize } from '../src/main'
 
 describe('Micheline', () => {
   test('int int true', () => {
@@ -26,6 +26,26 @@ describe('Micheline', () => {
     expect(micheline_equals(a, b)).toBe(false);
   })
 
+  test('normalize Pair', () => {
+    const a : Micheline = {
+      "prim": "Pair",
+      "args":
+        [
+          { "bytes": "0000fb442e7a31bf2470563e287e39a67e444e0e2ca1" },
+          { "prim": "Pair", "args": [{ "int": "2" }, { "int": "0" }] }
+        ]
+    };
+    const b : Micheline = {
+      "prim": "Pair",
+      "args":
+        [
+          { "bytes": "0000fb442e7a31bf2470563e287e39a67e444e0e2ca1" },
+          { "int": "2" },
+          { "int": "0" }
+        ]
+    };
+    expect(JSON.stringify(normalize(a))).toBe(JSON.stringify(b));
+  })
 })
 
 describe('ArchetypeType', () => {

@@ -1426,3 +1426,27 @@ export const replace_var = (x: UnsafeMicheline, params: Array<[string, Micheline
   }
   return aux(x);
 }
+
+export const normalize = (input: UnsafeMicheline): UnsafeMicheline => {
+  if (isPrimWithArgs(input)) {
+    const args = input.args.map(normalize);
+    if (args.length > 0) {
+      const last = args[args.length - 1];
+      if (isPrimWithArgs(last) && last.prim === 'Pair') {
+        return { ...input, args: [...args.slice(0, -1), ...last.args] };
+      }
+    }
+    return { ...input, args };
+  } else if (isArray(input)) {
+    return input.map(normalize);
+  }
+  return input;
+};
+
+function isPrimWithArgs(input: UnsafeMicheline): input is { prim: 'Pair'; args: Array<UnsafeMicheline> } {
+  return typeof input === 'object' && input !== null && 'prim' in input && input.prim === 'Pair' && 'args' in input;
+}
+
+function isArray(input: UnsafeMicheline): input is Array<UnsafeMicheline> {
+  return Array.isArray(input);
+}
