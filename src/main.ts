@@ -1246,6 +1246,22 @@ export const mich_array_to_mich = (l: Array<Micheline>): Micheline => {
   }
 }
 
+export const contract_to_mich_type = (a: MichelineType): MichelineType => {
+  return {
+    prim: "contract",
+    args: [a],
+    annots: []
+  }
+}
+
+export const contract_annot_to_mich_type = (mt: MichelineType, a: Array<string>): MichelineType => {
+  return {
+    prim: "contract",
+    args: [mt],
+    annots: a
+  }
+}
+
 export const option_to_mich_type = (a: MichelineType): MichelineType => {
   return {
     prim: "option",
