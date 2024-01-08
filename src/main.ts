@@ -605,6 +605,15 @@ export class Entrypoint implements ArchetypeType {
   toString(): string {
     return this.addr + '%' + this.name
   }
+  static from_mich(x: Micheline): Entrypoint {
+    const data = (x as Mstring)["string"];
+    if (data.indexOf("%") > 0) {
+      const arr = data.split("%");
+      return new Entrypoint(new Address(arr[0]), arr[1])
+    } else {
+      return new Entrypoint(new Address(data), "default")
+    }
+  }
 }
 
 export abstract class Enum<T> implements ArchetypeType {

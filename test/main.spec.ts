@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals, UnsafeMicheline, replace_var, Tez, normalize } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals, UnsafeMicheline, replace_var, Tez, normalize, Entrypoint } from '../src/main'
 
 describe('Micheline', () => {
   test('int int true', () => {
@@ -27,7 +27,7 @@ describe('Micheline', () => {
   })
 
   test('normalize Pair', () => {
-    const a : Micheline = {
+    const a: Micheline = {
       "prim": "Pair",
       "args":
         [
@@ -35,7 +35,7 @@ describe('Micheline', () => {
           { "prim": "Pair", "args": [{ "int": "2" }, { "int": "0" }] }
         ]
     };
-    const b : Micheline = {
+    const b: Micheline = {
       "prim": "Pair",
       "args":
         [
@@ -295,6 +295,18 @@ describe('ArchetypeType', () => {
       expect(new Duration("-31536000").toSecond()).toBe(-31536000)
     });
 
+  })
+
+  describe('Entrypoint', () => {
+    test('test from_mich basic', () => {
+      const input = { string: "KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe" };
+      expect(Entrypoint.from_mich(input).toString()).toBe("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe%default")
+    })
+
+    test('test from_mich with annot', () => {
+      const input = { string: "KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe%my_entrypoint" };
+      expect(Entrypoint.from_mich(input).toString()).toBe("KT1PkBvorKLwdrP3UWUMo3ytZrRUq3wqfFGe%my_entrypoint")
+    })
   })
 
   describe('Key', () => {
