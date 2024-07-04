@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Address, Chain_id, Duration, Key, Micheline, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals, UnsafeMicheline, replace_var, Tez, normalize, Entrypoint } from '../src/main'
+import { Address, Chain_id, Duration, Key, Micheline, Mstring, Nat, Rational, Signature, Ticket, Key_hash, micheline_equals, UnsafeMicheline, replace_var, Tez, normalize, Entrypoint, mich_to_date } from '../src/main'
 
 describe('Micheline', () => {
   test('int int true', () => {
@@ -230,6 +230,22 @@ describe('ArchetypeType', () => {
     })
 
   });
+
+  describe('Date', () => {
+
+    test('Succeeds mich_to_date with Valid date in string', () => {
+      const input = { "string": "2020-01-01T00:00:00Z" };
+      const res = mich_to_date(input);
+      expect(new Date("2020-01-01T00:00:00Z").toString()).toBe(res.toString())
+    });
+
+    test('Succeeds mich_to_date with Valid date in int', () => {
+      const input = { "int": "1577836800" };
+      const res = mich_to_date(input);
+      expect(new Date("2020-01-01T00:00:00Z").toString()).toBe(res.toString())
+    });
+
+  })
 
   describe('Duration', () => {
 

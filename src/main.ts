@@ -1383,7 +1383,13 @@ export const mich_to_string = (x: Micheline): string => {
 }
 
 export const mich_to_date = (x: Micheline): Date => {
-  return new Date((x as Mstring)["string"])
+  if ('int' in x) {
+    return new Date(Number(x.int) * 1000);
+  }
+  if ('string' in x) {
+    return new Date(x.string);
+  }
+  throw new Error("Unexpected Micheline type for date conversion");
 }
 
 export const mich_to_bool = (x: Micheline): boolean => {
